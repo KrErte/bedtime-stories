@@ -1,0 +1,25 @@
+server:
+  port: 8085
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200,http://localhost:4201
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/storyforme;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
