@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/storyforme}
-    username: ${SPRING_DATASOURCE_USERNAME:storyforme}
-    password: ${SPRING_DATASOURCE_PASSWORD:storyforme}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dreamlit}
+    username: ${SPRING_DATASOURCE_USERNAME:dreamlit}
+    password: ${SPRING_DATASOURCE_PASSWORD:dreamlit}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -48,7 +48,7 @@ stripe:
 
 resend:
   api-key: ${RESEND_API_KEY:}
-  from-email: ${FROM_EMAIL:hello@storyfor.me}
+  from-email: ${FROM_EMAIL:hello@dreamlit.ee}
 
 google:
   client-id: ${GOOGLE_CLIENT_ID:}

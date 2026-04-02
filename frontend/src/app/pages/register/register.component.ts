@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
     <div class="min-h-screen flex items-center justify-center px-4">
       <div class="card w-full max-w-md">
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">StoryFor.me</h1>
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">Dreamlit.ee</h1>
           <p class="text-navy-300 mt-2">Create your account</p>
         </div>
         @if (error()) {

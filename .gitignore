@@ -31,3 +31,17 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Playwright MCP
+.playwright-mcp/
+
+# Mobile build artifacts
+frontend/ios/App/Pods/
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/capacitor-cordova-android-plugins/
+
+# Flutter
+mobile/.dart_tool/
+mobile/.packages
+mobile/build/

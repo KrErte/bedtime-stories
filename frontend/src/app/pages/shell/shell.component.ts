@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
       <!-- Sidebar -->
       <aside class="w-64 bg-navy-900/80 border-r border-navy-700/50 p-6 hidden md:flex flex-col">
         <a routerLink="/app" class="text-2xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent mb-8 block">
-          StoryFor.me
+          Dreamlit.ee
         </a>
         <nav class="space-y-2 flex-1">
           <a routerLink="/app/new-story" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
@@ -53,7 +53,7 @@ import { AuthService } from '../../services/auth.service';
       <!-- Mobile header -->
       <div class="flex-1 flex flex-col">
         <header class="md:hidden flex items-center justify-between p-4 bg-navy-900/80 border-b border-navy-700/50">
-          <a routerLink="/app" class="text-xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">StoryFor.me</a>
+          <a routerLink="/app" class="text-xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">Dreamlit.ee</a>
           <button (click)="menuOpen = !menuOpen" class="text-navy-300 p-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>

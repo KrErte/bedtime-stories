@@ -5,8 +5,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/storyforme
-      - SPRING_DATASOURCE_USERNAME=storyforme
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/dreamlit
+      - SPRING_DATASOURCE_USERNAME=dreamlit
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -46,15 +46,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=storyforme
-      - POSTGRES_USER=storyforme
+      - POSTGRES_DB=dreamlit
+      - POSTGRES_USER=dreamlit
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - pg-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U storyforme"]
+      test: ["CMD-SHELL", "pg_isready -U dreamlit"]
       interval: 10s
       timeout: 5s
       retries: 5

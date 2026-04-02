@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 bg-navy-950/80 backdrop-blur-lg border-b border-navy-800/50">
       <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <span class="text-xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">StoryFor.me</span>
+        <span class="text-xl font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">Dreamlit.ee</span>
         <div class="flex items-center gap-4">
           <a routerLink="/login" class="text-sm text-navy-300 hover:text-white transition-colors">Sign In</a>
           <a routerLink="/register" class="btn-primary text-sm !py-2 !px-4">Get Started</a>
@@ -144,9 +144,9 @@ import { RouterLink } from '@angular/router';
     <!-- Footer -->
     <footer class="py-12 px-4 border-t border-navy-800/50">
       <div class="max-w-5xl mx-auto text-center">
-        <span class="text-lg font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">StoryFor.me</span>
+        <span class="text-lg font-bold bg-gradient-to-r from-story-purple to-story-pink bg-clip-text text-transparent">Dreamlit.ee</span>
         <p class="text-navy-500 text-sm mt-2">Making bedtime magical, one story at a time.</p>
-        <p class="text-navy-600 text-xs mt-4">&copy; 2026 StoryFor.me. All rights reserved.</p>
+        <p class="text-navy-600 text-xs mt-4">&copy; 2026 Dreamlit.ee. All rights reserved.</p>
       </div>
     </footer>
   `,
@@ -163,6 +163,6 @@ export class LandingComponent {
     { q: 'Is the free plan really free?', a: 'Yes! You get 1 story per day with no credit card required. Upgrade to Pro anytime for unlimited stories and audio.' },
     { q: 'Are the stories safe for kids?', a: 'Absolutely. Our AI is specifically tuned to create warm, calming, age-appropriate stories with no scary elements. Every story ends peacefully.' },
     { q: 'Can I cancel anytime?', a: 'Yes. Cancel your Pro subscription at any time. You keep Pro features until the end of your billing period.' },
-    { q: 'What ages is this for?', a: 'StoryFor.me is designed for children aged 2-10. The AI adjusts language complexity based on your child\'s age.' },
+    { q: 'What ages is this for?', a: 'Dreamlit.ee is designed for children aged 2-10. The AI adjusts language complexity based on your child\'s age.' },
   ];
 }

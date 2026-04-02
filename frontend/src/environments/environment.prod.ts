@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.storyfor.me/api',
+  apiUrl: 'https://api.dreamlit.ee/api',
   stripePublishableKey: '',
   googleClientId: '',
 };

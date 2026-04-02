@@ -1,4 +1,4 @@
-# StoryFor.me — AI Personalized Bedtime Stories
+# Dreamlit.ee — AI Personalized Bedtime Stories
 
 ## Product Overview
 
@@ -25,7 +25,7 @@ AI-powered personalized bedtime stories where the child IS the main character. P
 | Auth | Spring Security + JWT + Google OAuth2 |
 | Deployment | Docker Compose on Contabo VPS |
 | Reverse Proxy | Caddy (auto HTTPS) |
-| Domain | storyfor.me (or similar, TBD) |
+| Domain | dreamlit.ee (or similar, TBD) |
 
 ---
 
@@ -34,8 +34,8 @@ AI-powered personalized bedtime stories where the child IS the main character. P
 ```
 ┌─────────────────────────────────────────────────┐
 │                   Caddy (HTTPS)                 │
-│         storyfor.me → frontend:4200             │
-│         api.storyfor.me → backend:8080          │
+│         dreamlit.ee → frontend:4200             │
+│         api.dreamlit.ee → backend:8080          │
 └─────────────────┬───────────────────────────────┘
                   │
     ┌─────────────┴─────────────┐
@@ -351,7 +351,7 @@ The story reader is the CORE experience. It must feel like a digital storybook:
 ### Products & Prices
 
 ```
-Product: "StoryFor.me Pro"
+Product: "Dreamlit.ee Pro"
 Price: $7.99/month (USD), recurring
 Trial: 7-day free trial (no card required for free tier, card for trial)
 ```
@@ -431,7 +431,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/storyforme
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/dreamlit
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
@@ -450,8 +450,8 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=storyforme
-      - POSTGRES_USER=storyforme
+      - POSTGRES_DB=dreamlit
+      - POSTGRES_USER=dreamlit
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - pg-data:/var/lib/postgresql/data
@@ -475,11 +475,11 @@ volumes:
 
 ### Caddyfile
 ```
-storyfor.me {
+dreamlit.ee {
     reverse_proxy frontend:4200
 }
 
-api.storyfor.me {
+api.dreamlit.ee {
     reverse_proxy backend:8080
 }
 ```
@@ -541,12 +541,12 @@ RESEND_API_KEY=re_...
 
 # App
 JWT_SECRET=<random_256bit>
-APP_URL=https://storyfor.me
-API_URL=https://api.storyfor.me
-ALLOWED_ORIGINS=https://storyfor.me
+APP_URL=https://dreamlit.ee
+API_URL=https://api.dreamlit.ee
+ALLOWED_ORIGINS=https://dreamlit.ee
 
 # Email
-FROM_EMAIL=hello@storyfor.me
+FROM_EMAIL=hello@dreamlit.ee
 ```
 
 ---

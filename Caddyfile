@@ -1,7 +1,7 @@
-storyfor.me {
-    reverse_proxy frontend:4200
+dreamlit.ee {
+    reverse_proxy frontend:80
 }
 
-api.storyfor.me {
+api.dreamlit.ee {
     reverse_proxy backend:8080
 }

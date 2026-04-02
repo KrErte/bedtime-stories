@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Story, StoryService } from '../../services/story.service';
 import { AuthService } from '../../services/auth.service';
+import { NativeService } from '../../services/native.service';
 
 @Component({
   selector: 'app-story-reader',
@@ -67,6 +68,9 @@ import { AuthService } from '../../services/auth.service';
             <span>{{ story()!.isFavorite ? '&#9829;' : '&#9825;' }}</span>
             {{ story()!.isFavorite ? 'Favorited' : 'Favorite' }}
           </button>
+          <button (click)="share()" class="btn-secondary flex items-center gap-2">
+            <span>&#128228;</span> Share
+          </button>
           <a [href]="storyService.getPdfUrl(story()!.id)" target="_blank" class="btn-secondary flex items-center gap-2">
             <span>&#128196;</span> PDF
           </a>
@@ -103,6 +107,7 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
     public storyService: StoryService,
     private auth: AuthService,
     private router: Router,
+    private native: NativeService,
   ) {}
 
   ngOnInit() {
@@ -158,6 +163,11 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
   seek(event: Event) {
     const val = +(event.target as HTMLInputElement).value;
     this.audioRef.nativeElement.currentTime = val;
+  }
+
+  share() {
+    const s = this.story();
+    if (s) this.native.shareStory(s.title, s.id);
   }
 
   toggleFavorite() {
