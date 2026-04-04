@@ -19,10 +19,10 @@ import { Child, ChildService } from '../../services/child.service';
       @if (showForm()) {
         <div class="card mb-6">
           <h2 class="text-lg font-semibold mb-4">{{ editing() ? 'Edit' : 'Add' }} Child</h2>
-          <form (ngSubmit)="saveChild()" class="space-y-4">
-            <input type="text" [(ngModel)]="form.name" name="name" placeholder="Child's name" class="input-field" required>
+          <div class="space-y-4">
+            <input type="text" [(ngModel)]="form.name" name="name" placeholder="Child's name" class="input-field">
             <div class="grid grid-cols-2 gap-4">
-              <input type="number" [(ngModel)]="form.age" name="age" placeholder="Age (1-12)" class="input-field" min="1" max="12" required>
+              <input type="number" [(ngModel)]="form.age" name="age" placeholder="Age (1-12)" class="input-field" min="1" max="12" inputmode="numeric">
               <select [(ngModel)]="form.gender" name="gender" class="input-field">
                 <option value="">Gender</option>
                 <option value="boy">Boy</option>
@@ -33,12 +33,12 @@ import { Child, ChildService } from '../../services/child.service';
             <input type="text" [(ngModel)]="interestsStr" name="interests" placeholder="Interests (comma separated: dinosaurs, space, music)" class="input-field">
             <input type="text" [(ngModel)]="form.favoriteAnimal" name="animal" placeholder="Favorite animal" class="input-field">
             <div class="flex gap-3">
-              <button type="submit" class="btn-primary text-sm" [disabled]="saving()">
+              <button type="button" (click)="saveChild()" class="btn-primary text-sm" [disabled]="saving()">
                 {{ saving() ? 'Saving...' : 'Save' }}
               </button>
               <button type="button" (click)="cancelForm()" class="btn-secondary text-sm">Cancel</button>
             </div>
-          </form>
+          </div>
         </div>
       }
 
@@ -95,7 +95,9 @@ export class ChildrenComponent implements OnInit {
 
   saveChild() {
     this.saving.set(true);
-    const data = { ...this.form, age: this.form.age ?? undefined, interests: this.interestsStr.split(',').map(s => s.trim()).filter(Boolean) };
+    const age = Number(this.form.age);
+    if (!this.form.name?.trim() || !age || age < 1 || age > 12) return this.saving.set(false);
+    const data = { ...this.form, name: this.form.name.trim(), age, interests: this.interestsStr.split(',').map(s => s.trim()).filter(Boolean) };
     const obs = this.editing()
       ? this.childService.updateChild(this.editing()!, data as any)
       : this.childService.createChild(data as any);
