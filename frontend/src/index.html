@@ -77,14 +77,21 @@
         };
       });
 
-      // iOS Safari - manual instructions
-      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-      if (isIOS && isSafari) {
-        hint.innerHTML = 'Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>';
-        btn.textContent = 'Got it';
-        btn.onclick = function() { banner.style.display = 'none'; localStorage.setItem('pwa-dismissed', Date.now()); };
-        banner.style.display = 'block';
+      // Show on all mobile devices after short delay
+      var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        setTimeout(function() {
+          if (banner.style.display === 'block') return; // already shown by beforeinstallprompt
+          var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          if (isIOS) {
+            hint.innerHTML = 'Tap <strong>Share</strong> &#x2B06; then <strong>"Add to Home Screen"</strong>';
+          } else {
+            hint.innerHTML = 'Tap <strong>&#8942; menu</strong> then <strong>"Install app"</strong>';
+          }
+          btn.textContent = 'OK';
+          btn.onclick = function() { banner.style.display = 'none'; localStorage.setItem('pwa-dismissed', Date.now()); };
+          banner.style.display = 'block';
+        }, 1500);
       }
     })();
   </script>
