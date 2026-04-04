@@ -10,12 +10,12 @@ import me.storyfor.backend.security.SecurityUtils;
 import me.storyfor.backend.service.AudioService;
 import me.storyfor.backend.service.PdfService;
 import me.storyfor.backend.service.StoryService;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -76,32 +76,34 @@ public class StoryController {
     }
 
     @GetMapping("/{id}/audio")
-    public ResponseEntity<StreamingResponseBody> audio(@PathVariable UUID id) {
-        Story story = storyRepository.findById(id).orElseThrow(() -> new RuntimeException("Story not found"));
+    public ResponseEntity<byte[]> audio(@PathVariable UUID id) throws IOException {
+        Story story = storyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Story not found"));
         if (!story.getUserId().equals(SecurityUtils.getCurrentUser().getId())) {
-            throw new RuntimeException("Not authorized");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized");
         }
         Path audioPath = audioService.getAudioPath(id);
         if (!Files.exists(audioPath)) {
             return ResponseEntity.notFound().build();
         }
-        StreamingResponseBody body = outputStream -> Files.copy(audioPath, outputStream);
+        byte[] audioBytes = Files.readAllBytes(audioPath);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
+                .contentLength(audioBytes.length)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"story.mp3\"")
-                .body(body);
+                .body(audioBytes);
     }
 
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> pdf(@PathVariable UUID id) {
-        Story story = storyRepository.findById(id).orElseThrow(() -> new RuntimeException("Story not found"));
+        Story story = storyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Story not found"));
         if (!story.getUserId().equals(SecurityUtils.getCurrentUser().getId())) {
-            throw new RuntimeException("Not authorized");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized");
         }
         byte[] pdfBytes = pdfService.generatePdf(story);
+        String safeTitle = story.getTitle().replaceAll("[^a-zA-Z0-9\\-_ ]", "");
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + story.getTitle() + ".pdf\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + safeTitle + ".pdf\"")
                 .body(pdfBytes);
     }
 }
