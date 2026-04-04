@@ -25,7 +25,7 @@ public class DemoController {
             @RequestParam(defaultValue = "Luna") String childName,
             @RequestParam(defaultValue = "5") int age,
             @RequestParam(defaultValue = "adventure") String theme) {
-        String rawStory = claudeService.generateStory(childName, age, "child", "animals, stars", theme, null, 200);
+        String rawStory = claudeService.generateStory(childName, age, "child", "animals, stars", theme, null, 200, "English");
         String title;
         String content;
         int idx = rawStory.indexOf("\n");
