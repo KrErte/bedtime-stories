@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.dreamlit.ee/api',
+  apiUrl: '/api',
   stripePublishableKey: '',
   googleClientId: '',
 };
