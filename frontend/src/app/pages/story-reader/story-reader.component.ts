@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Story, StoryService } from '../../services/story.service';
 import { AuthService } from '../../services/auth.service';
 import { NativeService } from '../../services/native.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-story-reader',
@@ -58,7 +59,7 @@ import { NativeService } from '../../services/native.service';
                 </div>
               </div>
             </div>
-            <audio #audioPlayer [src]="story()!.audioUrl" (timeupdate)="onTimeUpdate()" (loadedmetadata)="onMetadataLoaded()" (ended)="playing.set(false)"></audio>
+            <audio #audioPlayer [src]="audioBlobUrl()" (timeupdate)="onTimeUpdate()" (loadedmetadata)="onMetadataLoaded()" (ended)="playing.set(false)"></audio>
           </div>
         }
 
@@ -101,6 +102,7 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
   currentTime = signal(0);
   duration = signal(0);
   storyBlocks = signal<{type: string; content: string}[]>([]);
+  audioBlobUrl = signal<string>('');
 
   constructor(
     private route: ActivatedRoute,
@@ -108,6 +110,7 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private router: Router,
     private native: NativeService,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
@@ -117,6 +120,9 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
         this.story.set(story);
         this.buildBlocks(story);
         this.loading.set(false);
+        if (story.audioUrl) {
+          this.loadAudio(story.audioUrl);
+        }
       },
       error: () => this.router.navigate(['/app/library']),
     });
@@ -126,6 +132,15 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
     if (this.audioRef?.nativeElement) {
       this.audioRef.nativeElement.pause();
     }
+    const url = this.audioBlobUrl();
+    if (url) URL.revokeObjectURL(url);
+  }
+
+  private loadAudio(audioUrl: string) {
+    this.http.get(audioUrl, { responseType: 'blob' }).subscribe({
+      next: (blob) => this.audioBlobUrl.set(URL.createObjectURL(blob)),
+      error: () => console.warn('Failed to load audio'),
+    });
   }
 
   private buildBlocks(story: Story) {
