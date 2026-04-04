@@ -6,11 +6,54 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="AI-powered personalized bedtime stories where your child is the hero. Audio narration, illustrations, and magical adventures every night.">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- PWA / theme -->
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#080720">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dreamlit">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+  <!-- Standard favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
   <app-root></app-root>
+
+  <!-- Service Worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/sw.js', { scope: '/' })
+          .then((registration) => {
+            console.log('[SW] Registered, scope:', registration.scope);
+
+            // Notify any waiting service worker to activate immediately.
+            if (registration.waiting) {
+              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (!newWorker) return;
+              newWorker.addEventListener('statechange', () => {
+                if (
+                  newWorker.state === 'installed' &&
+                  navigator.serviceWorker.controller
+                ) {
+                  // A new version is available — optionally notify the user.
+                  console.log('[SW] New version available. Refresh to update.');
+                }
+              });
+            });
+          })
+          .catch((err) => console.error('[SW] Registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
