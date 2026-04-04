@@ -11,6 +11,7 @@ import me.storyfor.backend.security.JwtService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class AuthService {
         this.appUrl = appUrl;
     }
 
+    @Transactional
     public AuthResponse register(AuthRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email already registered");
