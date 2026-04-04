@@ -29,8 +29,8 @@ export interface Page<T> {
 export class StoryService {
   constructor(private api: ApiService) {}
 
-  generate(childId: string, theme: string, voice?: string) {
-    return this.api.post<Story>('/stories/generate', { childId, theme, voice });
+  generate(childId: string, theme: string, voice?: string, language?: string) {
+    return this.api.post<Story>('/stories/generate', { childId, theme, voice, language });
   }
 
   getStories(page = 0, size = 10, childId?: string) {

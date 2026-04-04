@@ -24,28 +24,30 @@ public class ClaudeService {
     }
 
     public String generateStory(String childName, int age, String gender, String interests,
-                                 String theme, String favoriteAnimal, int wordCount) {
+                                 String theme, String favoriteAnimal, int wordCount, String language) {
+        String lang = language != null ? language : "English";
         String systemPrompt = """
                 You are a children's bedtime story writer. You write warm, calming, \
                 age-appropriate stories that help children fall asleep. The stories \
                 always have a positive message and a peaceful ending.
 
                 Rules:
+                - Write the ENTIRE story in %s
                 - The child named %s is ALWAYS the main character
                 - Age-appropriate language for a %d-year-old
                 - Include the child's interests: %s
                 - Story theme: %s
-                - Word count: exactly %d words
+                - Word count: approximately %d words
                 - Structure: beginning → small adventure → gentle resolution → sleepy ending
                 - End with the child falling asleep in the story
                 - Tone: warm, magical, soothing
                 - No scary elements, no villains, no conflict that isn't resolved
                 - Include sensory details (soft blankets, warm light, gentle breeze)
                 - Return ONLY the story title on the first line, then a blank line, then the story text. No other formatting.
-                """.formatted(childName, age, interests, theme, wordCount);
+                """.formatted(lang, childName, age, interests, theme, wordCount);
 
-        String userPrompt = "Write a bedtime story for %s, a %d-year-old %s who loves %s. Tonight's theme is %s.%s"
-                .formatted(childName, age, gender != null ? gender : "child", interests, theme,
+        String userPrompt = "Write a bedtime story in %s for %s, a %d-year-old %s who loves %s. Tonight's theme is %s.%s"
+                .formatted(lang, childName, age, gender != null ? gender : "child", interests, theme,
                         favoriteAnimal != null ? " Include their favorite animal: " + favoriteAnimal + "." : "");
 
         try {

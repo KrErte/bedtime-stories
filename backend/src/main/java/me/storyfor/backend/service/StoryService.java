@@ -67,10 +67,12 @@ public class StoryService {
         String interests = child.getInterests() != null ? String.join(", ", child.getInterests()) : "stories";
 
         // Generate story text
+        String language = request.language() != null ? request.language() : "English";
+
         String rawStory = claudeService.generateStory(
                 child.getName(), child.getAge(),
                 child.getGender(), interests, theme,
-                child.getFavoriteAnimal(), wordCount);
+                child.getFavoriteAnimal(), wordCount, language);
 
         // Parse title and content
         String title;
@@ -98,6 +100,7 @@ public class StoryService {
         story.setStoryTheme(theme);
         story.setIllustrationTheme(illustrationTheme);
         story.setIllustrationUrls(illustrations);
+        story.setLanguage(language);
         story = storyRepository.save(story);
 
         // Generate audio for Pro users

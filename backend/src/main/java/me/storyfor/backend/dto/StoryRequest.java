@@ -6,5 +6,6 @@ import java.util.UUID;
 public record StoryRequest(
     @NotNull UUID childId,
     String theme,
-    String voice
+    String voice,
+    String language
 ) {}
