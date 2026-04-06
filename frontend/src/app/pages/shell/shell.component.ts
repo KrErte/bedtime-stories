@@ -24,6 +24,9 @@ import { AuthService } from '../../services/auth.service';
           <a routerLink="/app/favorites" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
             <span>&#9829;</span> Favorites
           </a>
+          <a routerLink="/app/dream-universe" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
+            <span>&#127756;</span> Dream Universe
+          </a>
           <a routerLink="/app/children" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
             <span>&#128118;</span> Children
           </a>
@@ -66,6 +69,7 @@ import { AuthService } from '../../services/auth.service';
             <a routerLink="/app/new-story" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">New Story</a>
             <a routerLink="/app/library" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Library</a>
             <a routerLink="/app/favorites" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Favorites</a>
+            <a routerLink="/app/dream-universe" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Dream Universe</a>
             <a routerLink="/app/children" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Children</a>
             <a routerLink="/app/settings" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Settings</a>
             <button (click)="auth.logout()" class="text-red-400 px-4 py-2">Sign out</button>

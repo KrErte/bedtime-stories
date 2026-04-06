@@ -18,6 +18,7 @@ export const routes: Routes = [
       { path: 'story/:id', loadComponent: () => import('./pages/story-reader/story-reader.component').then(m => m.StoryReaderComponent) },
       { path: 'library', loadComponent: () => import('./pages/library/library.component').then(m => m.LibraryComponent) },
       { path: 'favorites', loadComponent: () => import('./pages/favorites/favorites.component').then(m => m.FavoritesComponent) },
+      { path: 'dream-universe', loadComponent: () => import('./pages/dream-universe/dream-universe.component').then(m => m.DreamUniverseComponent) },
       { path: 'settings', loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
       { path: 'subscribe', loadComponent: () => import('./pages/subscribe/subscribe.component').then(m => m.SubscribeComponent) },
     ]
