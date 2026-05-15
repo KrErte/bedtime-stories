@@ -41,6 +41,9 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(AuthRequest request) {
+        if (request.name() == null || request.name().isBlank()) {
+            throw new IllegalArgumentException("Name is required");
+        }
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email already registered");
         }

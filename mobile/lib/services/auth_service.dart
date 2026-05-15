@@ -28,10 +28,14 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> register(String email, String password, String name) async {
-    final res = await _api.post('/auth/register', body: {
-      'email': email, 'password': password, 'name': name,
-    });
-    await _handleAuth(res);
+    try {
+      final res = await _api.post('/auth/register', body: {
+        'email': email, 'password': password, 'name': name,
+      });
+      await _handleAuth(res);
+    } on ApiException catch (e) {
+      throw Exception(e.message);
+    }
   }
 
   Future<void> login(String email, String password) async {
