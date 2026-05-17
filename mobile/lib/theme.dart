@@ -21,7 +21,7 @@ class AppTheme {
       secondary: storyPink,
       surface: navy800,
     ),
-    fontFamily: 'Inter',
+    
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -54,7 +54,7 @@ class AppTheme {
       hintStyle: const TextStyle(color: navy400),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: navy800.withOpacity(0.5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

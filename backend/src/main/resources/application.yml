@@ -43,7 +43,8 @@ openai:
 stripe:
   secret-key: ${STRIPE_SECRET_KEY:}
   webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
-  price-id: ${STRIPE_PRICE_ID:}
+  price-id-eur: ${STRIPE_PRICE_ID_EUR:}
+  price-id-usd: ${STRIPE_PRICE_ID_USD:}
   publishable-key: ${STRIPE_PUBLISHABLE_KEY:}
 
 resend:

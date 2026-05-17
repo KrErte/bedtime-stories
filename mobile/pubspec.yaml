@@ -1,4 +1,4 @@
-name: storyforme
+name: dreamlit
 description: AI-powered personalized bedtime stories
 
 publish_to: 'none'
@@ -29,11 +29,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  fonts:
-    - family: Merriweather
-      fonts:
-        - asset: assets/fonts/Merriweather-Regular.ttf
-        - asset: assets/fonts/Merriweather-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Merriweather-Italic.ttf
-          style: italic

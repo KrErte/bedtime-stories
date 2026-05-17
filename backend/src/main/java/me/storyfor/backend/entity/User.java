@@ -3,6 +3,7 @@ package me.storyfor.backend.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
+import me.storyfor.backend.entity.SubscriptionStatus;
 
 @Entity
 @Table(name = "users")
@@ -31,8 +32,9 @@ public class User {
     @Column(name = "stripe_customer_id")
     private String stripeCustomerId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "subscription_status")
-    private String subscriptionStatus;
+    private SubscriptionStatus subscriptionStatus = SubscriptionStatus.free;
 
     @Column(name = "subscription_expires_at")
     private Instant subscriptionExpiresAt;
@@ -92,8 +94,8 @@ public class User {
     public String getStripeCustomerId() { return stripeCustomerId; }
     public void setStripeCustomerId(String stripeCustomerId) { this.stripeCustomerId = stripeCustomerId; }
 
-    public String getSubscriptionStatus() { return subscriptionStatus; }
-    public void setSubscriptionStatus(String subscriptionStatus) { this.subscriptionStatus = subscriptionStatus; }
+    public SubscriptionStatus getSubscriptionStatus() { return subscriptionStatus; }
+    public void setSubscriptionStatus(SubscriptionStatus subscriptionStatus) { this.subscriptionStatus = subscriptionStatus; }
 
     public Instant getSubscriptionExpiresAt() { return subscriptionExpiresAt; }
     public void setSubscriptionExpiresAt(Instant subscriptionExpiresAt) { this.subscriptionExpiresAt = subscriptionExpiresAt; }

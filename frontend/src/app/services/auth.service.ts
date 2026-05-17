@@ -2,7 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface User {
   id: string;
@@ -26,6 +26,13 @@ export class AuthService {
   isLoggedIn = computed(() => !!this.currentUser());
   isPro = computed(() => this.currentUser()?.subscriptionStatus === 'pro');
 
+  // Token refresh lock — prevents concurrent refresh storms
+  private _isRefreshing = false;
+  private _refreshToken$ = new BehaviorSubject<string | null>(null);
+
+  get isRefreshing(): boolean { return this._isRefreshing; }
+  get refreshToken$(): Observable<string | null> { return this._refreshToken$.asObservable(); }
+
   constructor(private http: HttpClient, private router: Router) {
     const stored = localStorage.getItem('user');
     if (stored) {
@@ -48,11 +55,33 @@ export class AuthService {
       .pipe(tap(res => this.handleAuth(res)));
   }
 
-  refreshToken() {
+  /**
+   * Initiates a token refresh. Returns null when no refresh token is available.
+   * Callers should use the interceptor's lock pattern rather than calling this directly.
+   */
+  doRefresh(): Observable<AuthResponse> | null {
     const refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) return null;
     return this.http.post<AuthResponse>(`${this.api}/auth/refresh`, { refreshToken })
       .pipe(tap(res => this.handleAuth(res)));
+  }
+
+  /** Called by the interceptor to mark a refresh as in-flight. */
+  beginRefresh(): void {
+    this._isRefreshing = true;
+    this._refreshToken$.next(null);
+  }
+
+  /** Called by the interceptor when refresh succeeds. */
+  completeRefresh(newToken: string): void {
+    this._isRefreshing = false;
+    this._refreshToken$.next(newToken);
+  }
+
+  /** Called by the interceptor when refresh fails. */
+  failRefresh(): void {
+    this._isRefreshing = false;
+    this._refreshToken$.next(null);
   }
 
   forgotPassword(email: string) {

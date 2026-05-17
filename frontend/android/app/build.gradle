@@ -12,10 +12,26 @@ android {
         versionName "1.0.0"
     }
 
+    signingConfigs {
+        release {
+            // Genereeri keystore: ./generate-keystore.sh
+            // Pane dreamlit-release.jks -> android/app/ kausta
+            storeFile file("dreamlit-release.jks")
+            storePassword System.getenv("KEYSTORE_PASS") ?: ""
+            keyAlias System.getenv("KEY_ALIAS") ?: "dreamlit"
+            keyPassword System.getenv("KEY_PASS") ?: ""
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

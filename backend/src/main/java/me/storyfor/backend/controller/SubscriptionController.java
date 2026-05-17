@@ -19,16 +19,17 @@ public class SubscriptionController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Map<String, String>> checkout() throws Exception {
+    public ResponseEntity<Map<String, String>> checkout(
+            @RequestParam(defaultValue = "eur") String currency) throws Exception {
         User user = SecurityUtils.getCurrentUser();
-        String url = stripeService.createCheckoutSession(user);
+        String url = stripeService.createCheckoutSession(user, currency);
         return ResponseEntity.ok(Map.of("url", url));
     }
 
     @GetMapping("/status")
     public ResponseEntity<Map<String, String>> status() {
         User user = SecurityUtils.getCurrentUser();
-        return ResponseEntity.ok(Map.of("status", user.getSubscriptionStatus()));
+        return ResponseEntity.ok(Map.of("status", user.getSubscriptionStatus().name()));
     }
 
     @PostMapping("/cancel")

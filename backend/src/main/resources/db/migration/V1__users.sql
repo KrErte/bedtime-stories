@@ -7,12 +7,12 @@ CREATE TABLE users (
     auth_provider_id VARCHAR(255),
     stripe_customer_id VARCHAR(255),
     subscription_status VARCHAR(50) DEFAULT 'free',
-    subscription_expires_at TIMESTAMP,
+    subscription_expires_at TIMESTAMPTZ,
     stories_generated_today INT DEFAULT 0,
     stories_generated_total INT DEFAULT 0,
     last_story_date DATE,
     password_reset_token VARCHAR(255),
-    password_reset_expires_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    password_reset_expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

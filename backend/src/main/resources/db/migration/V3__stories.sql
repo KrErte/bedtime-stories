@@ -15,7 +15,7 @@ CREATE TABLE stories (
     ai_model VARCHAR(100) DEFAULT 'claude-haiku-4-5',
     tts_model VARCHAR(100) DEFAULT 'openai-tts-1',
     generation_cost_cents INT,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX idx_stories_user_id ON stories(user_id);
 CREATE INDEX idx_stories_child_id ON stories(child_id);

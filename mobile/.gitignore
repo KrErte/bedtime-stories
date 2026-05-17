@@ -1,0 +1,13 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Android keystore - EI TOHI GITI MINNA!
+android/key.properties
+android/app/dreamlit-release.jks
+*.jks
+*.keystore

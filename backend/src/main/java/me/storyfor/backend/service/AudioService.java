@@ -20,6 +20,10 @@ public class AudioService {
     private final String apiKey;
     private final String storagePath;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    // Reuse a single client — creating one per request is expensive
+    private final java.net.http.HttpClient httpClient = java.net.http.HttpClient.newBuilder()
+            .connectTimeout(java.time.Duration.ofSeconds(10))
+            .build();
 
     private static final java.util.Map<String, String> VOICE_MAP = java.util.Map.of(
         "luna", "nova", "atlas", "echo", "willow", "shimmer", "sage", "fable"
@@ -76,7 +80,7 @@ public class AudioService {
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpResponse<byte[]> response = HttpClient.newHttpClient()
+        HttpResponse<byte[]> response = httpClient
                 .send(request, HttpResponse.BodyHandlers.ofByteArray());
         if (response.statusCode() != 200) {
             throw new RuntimeException("TTS API error: " + response.statusCode());

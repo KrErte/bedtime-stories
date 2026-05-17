@@ -45,3 +45,8 @@ frontend/android/capacitor-cordova-android-plugins/
 mobile/.dart_tool/
 mobile/.packages
 mobile/build/
+.aider*
+-e 
+# Android keystore - EI TOHI GITI MINNA!
+*.jks
+*.keystore

@@ -4,7 +4,10 @@ import me.storyfor.backend.dto.StoryDto;
 import me.storyfor.backend.dto.StoryRequest;
 import me.storyfor.backend.entity.Child;
 import me.storyfor.backend.entity.Story;
+import me.storyfor.backend.entity.SubscriptionStatus;
 import me.storyfor.backend.entity.User;
+import me.storyfor.backend.exception.ForbiddenException;
+import me.storyfor.backend.exception.ResourceNotFoundException;
 import me.storyfor.backend.repository.ChildRepository;
 import me.storyfor.backend.repository.StoryRepository;
 import me.storyfor.backend.repository.UserRepository;
@@ -40,7 +43,7 @@ public class StoryService {
 
     @Transactional
     public StoryDto generateStory(User user, StoryRequest request) {
-        boolean isPro = "pro".equals(user.getSubscriptionStatus());
+        boolean isPro = user.getSubscriptionStatus() != null && user.getSubscriptionStatus().isPro();
 
         // Reset daily counter if new day
         if (user.getLastStoryDate() == null || !user.getLastStoryDate().equals(LocalDate.now())) {
@@ -57,9 +60,9 @@ public class StoryService {
         }
 
         Child child = childRepository.findById(request.childId())
-                .orElseThrow(() -> new RuntimeException("Child not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
         if (!child.getUserId().equals(user.getId())) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to use this child profile");
         }
 
         String theme = request.theme() != null ? request.theme() : "adventure";
@@ -139,18 +142,18 @@ public class StoryService {
 
     public StoryDto getStory(UUID userId, UUID storyId) {
         Story story = storyRepository.findById(storyId)
-                .orElseThrow(() -> new RuntimeException("Story not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Story not found"));
         if (!story.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to access this story");
         }
         return StoryDto.from(story);
     }
 
     public StoryDto toggleFavorite(UUID userId, UUID storyId) {
         Story story = storyRepository.findById(storyId)
-                .orElseThrow(() -> new RuntimeException("Story not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Story not found"));
         if (!story.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to modify this story");
         }
         story.setIsFavorite(!Boolean.TRUE.equals(story.getIsFavorite()));
         return StoryDto.from(storyRepository.save(story));
@@ -158,9 +161,9 @@ public class StoryService {
 
     public void deleteStory(UUID userId, UUID storyId) {
         Story story = storyRepository.findById(storyId)
-                .orElseThrow(() -> new RuntimeException("Story not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Story not found"));
         if (!story.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to delete this story");
         }
         storyRepository.delete(story);
     }

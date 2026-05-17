@@ -1,5 +1,22 @@
+# Production (Caddy haldab HTTPS automaatselt)
+dreamlit.ee {
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+    handle /webhooks/* {
+        reverse_proxy backend:8080
+    }
+    handle {
+        reverse_proxy frontend:80
+    }
+}
+
+# Local development
 :80 {
     handle /api/* {
+        reverse_proxy backend:8080
+    }
+    handle /webhooks/* {
         reverse_proxy backend:8080
     }
     handle {

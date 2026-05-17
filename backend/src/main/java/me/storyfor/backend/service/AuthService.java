@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import me.storyfor.backend.dto.*;
+import me.storyfor.backend.entity.SubscriptionStatus;
 import me.storyfor.backend.entity.User;
 import me.storyfor.backend.repository.UserRepository;
 import me.storyfor.backend.security.JwtService;
@@ -13,8 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HexFormat;
 import java.util.UUID;
 
 @Service
@@ -52,7 +57,7 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setName(request.name());
         user.setAuthProvider("local");
-        user.setSubscriptionStatus("free");
+        user.setSubscriptionStatus(SubscriptionStatus.free);
         user.setStoriesGeneratedToday(0);
         user.setStoriesGeneratedTotal(0);
         user = userRepository.save(user);
@@ -89,7 +94,7 @@ public class AuthService {
                 newUser.setName(name);
                 newUser.setAuthProvider("google");
                 newUser.setAuthProviderId(googleId);
-                newUser.setSubscriptionStatus("free");
+                newUser.setSubscriptionStatus(SubscriptionStatus.free);
                 newUser.setStoriesGeneratedToday(0);
                 newUser.setStoriesGeneratedTotal(0);
                 return userRepository.save(newUser);
@@ -112,17 +117,18 @@ public class AuthService {
 
     public void forgotPassword(ForgotPasswordRequest request) {
         userRepository.findByEmail(request.email()).ifPresent(user -> {
-            String token = UUID.randomUUID().toString();
-            user.setPasswordResetToken(token);
+            String rawToken = UUID.randomUUID().toString();
+            user.setPasswordResetToken(hashToken(rawToken));
             user.setPasswordResetExpiresAt(Instant.now().plusSeconds(3600));
             userRepository.save(user);
-            String resetLink = appUrl + "/reset-password?token=" + token;
+            String resetLink = appUrl + "/reset-password?token=" + rawToken;
             emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), resetLink);
         });
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-        User user = userRepository.findByPasswordResetToken(request.token())
+        String tokenHash = hashToken(request.token());
+        User user = userRepository.findByPasswordResetToken(tokenHash)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid reset token"));
         if (user.getPasswordResetExpiresAt().isBefore(Instant.now())) {
             throw new IllegalArgumentException("Reset token has expired");
@@ -131,6 +137,16 @@ public class AuthService {
         user.setPasswordResetToken(null);
         user.setPasswordResetExpiresAt(null);
         userRepository.save(user);
+    }
+
+    private String hashToken(String raw) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(raw.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 not available", e);
+        }
     }
 
     private AuthResponse buildAuthResponse(User user) {

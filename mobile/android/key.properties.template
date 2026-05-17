@@ -1,0 +1,6 @@
+# Kopeeri see fail -> android/key.properties
+# key.properties EI TOHI giti minna!
+storePassword=SINU_KEYSTORE_PAROOL
+keyPassword=SINU_KEY_PAROOL
+keyAlias=dreamlit
+storeFile=dreamlit-release.jks

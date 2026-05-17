@@ -6,7 +6,7 @@ CREATE TABLE children (
     gender VARCHAR(20),
     interests TEXT[],
     favorite_animal VARCHAR(100),
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX idx_children_user_id ON children(user_id);

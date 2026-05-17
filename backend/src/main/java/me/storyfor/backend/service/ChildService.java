@@ -3,6 +3,8 @@ package me.storyfor.backend.service;
 import me.storyfor.backend.dto.ChildDto;
 import me.storyfor.backend.dto.ChildRequest;
 import me.storyfor.backend.entity.Child;
+import me.storyfor.backend.exception.ForbiddenException;
+import me.storyfor.backend.exception.ResourceNotFoundException;
 import me.storyfor.backend.repository.ChildRepository;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +41,9 @@ public class ChildService {
 
     public ChildDto updateChild(UUID userId, UUID childId, ChildRequest request) {
         Child child = childRepository.findById(childId)
-                .orElseThrow(() -> new RuntimeException("Child not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
         if (!child.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to modify this child");
         }
         child.setName(request.name());
         child.setAge(request.age());
@@ -53,9 +55,9 @@ public class ChildService {
 
     public void deleteChild(UUID userId, UUID childId) {
         Child child = childRepository.findById(childId)
-                .orElseThrow(() -> new RuntimeException("Child not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
         if (!child.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorized");
+            throw new ForbiddenException("Not authorized to delete this child");
         }
         childRepository.delete(child);
     }

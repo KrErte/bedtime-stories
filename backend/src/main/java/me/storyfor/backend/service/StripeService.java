@@ -7,12 +7,15 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import me.storyfor.backend.entity.SubscriptionEvent;
+import me.storyfor.backend.entity.SubscriptionStatus;
 import me.storyfor.backend.entity.User;
 import me.storyfor.backend.repository.SubscriptionEventRepository;
 import me.storyfor.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -24,20 +27,23 @@ public class StripeService {
     private final SubscriptionEventRepository eventRepository;
     private final String secretKey;
     private final String webhookSecret;
-    private final String priceId;
+    private final String priceIdEur;
+    private final String priceIdUsd;
     private final String appUrl;
 
     public StripeService(UserRepository userRepository,
                          SubscriptionEventRepository eventRepository,
                          @Value("${stripe.secret-key}") String secretKey,
                          @Value("${stripe.webhook-secret}") String webhookSecret,
-                         @Value("${stripe.price-id}") String priceId,
+                         @Value("${stripe.price-id-eur}") String priceIdEur,
+                         @Value("${stripe.price-id-usd:}") String priceIdUsd,
                          @Value("${app.url}") String appUrl) {
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
         this.secretKey = secretKey;
         this.webhookSecret = webhookSecret;
-        this.priceId = priceId;
+        this.priceIdEur = priceIdEur;
+        this.priceIdUsd = priceIdUsd;
         this.appUrl = appUrl;
     }
 
@@ -48,7 +54,12 @@ public class StripeService {
         }
     }
 
-    public String createCheckoutSession(User user) throws StripeException {
+    public String createCheckoutSession(User user, String currency) throws StripeException {
+        String resolvedCurrency = (currency != null) ? currency.toLowerCase() : "eur";
+        String selectedPriceId = "usd".equals(resolvedCurrency) && priceIdUsd != null && !priceIdUsd.isBlank()
+                ? priceIdUsd
+                : priceIdEur;
+
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                 .setCustomerEmail(user.getEmail())
@@ -56,7 +67,7 @@ public class StripeService {
                 .setSuccessUrl(appUrl + "/app/settings?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(appUrl + "/app/subscribe")
                 .addLineItem(SessionCreateParams.LineItem.builder()
-                        .setPrice(priceId)
+                        .setPrice(selectedPriceId)
                         .setQuantity(1L)
                         .build())
                 .setSubscriptionData(SessionCreateParams.SubscriptionData.builder()
@@ -67,6 +78,7 @@ public class StripeService {
         return session.getUrl();
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void handleWebhook(String payload, String sigHeader) {
         try {
             Event event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
@@ -82,7 +94,7 @@ public class StripeService {
                     String userId = session.getClientReferenceId();
                     User user = userRepository.findById(UUID.fromString(userId)).orElse(null);
                     if (user != null) {
-                        user.setSubscriptionStatus("pro");
+                        user.setSubscriptionStatus(SubscriptionStatus.pro);
                         user.setStripeCustomerId(session.getCustomer());
                         userRepository.save(user);
                     }
@@ -90,21 +102,21 @@ public class StripeService {
                 case "invoice.paid" -> {
                     Invoice invoice = (Invoice) deserializer.getObject().get();
                     userRepository.findByStripeCustomerId(invoice.getCustomer()).ifPresent(user -> {
-                        user.setSubscriptionStatus("pro");
+                        user.setSubscriptionStatus(SubscriptionStatus.pro);
                         userRepository.save(user);
                     });
                 }
                 case "invoice.payment_failed" -> {
                     Invoice invoice = (Invoice) deserializer.getObject().get();
                     userRepository.findByStripeCustomerId(invoice.getCustomer()).ifPresent(user -> {
-                        user.setSubscriptionStatus("cancelled");
+                        user.setSubscriptionStatus(SubscriptionStatus.cancelled);
                         userRepository.save(user);
                     });
                 }
                 case "customer.subscription.deleted" -> {
                     Subscription sub = (Subscription) deserializer.getObject().get();
                     userRepository.findByStripeCustomerId(sub.getCustomer()).ifPresent(user -> {
-                        user.setSubscriptionStatus("free");
+                        user.setSubscriptionStatus(SubscriptionStatus.free);
                         userRepository.save(user);
                     });
                 }
@@ -112,9 +124,9 @@ public class StripeService {
                     Subscription sub = (Subscription) deserializer.getObject().get();
                     userRepository.findByStripeCustomerId(sub.getCustomer()).ifPresent(user -> {
                         if ("active".equals(sub.getStatus()) || "trialing".equals(sub.getStatus())) {
-                            user.setSubscriptionStatus("pro");
+                            user.setSubscriptionStatus(SubscriptionStatus.pro);
                         } else {
-                            user.setSubscriptionStatus("cancelled");
+                            user.setSubscriptionStatus(SubscriptionStatus.cancelled);
                         }
                         userRepository.save(user);
                     });
@@ -140,7 +152,7 @@ public class StripeService {
         for (Subscription sub : Subscription.list(params).getData()) {
             sub.cancel();
         }
-        user.setSubscriptionStatus("cancelled");
+        user.setSubscriptionStatus(SubscriptionStatus.cancelled);
         userRepository.save(user);
     }
 }

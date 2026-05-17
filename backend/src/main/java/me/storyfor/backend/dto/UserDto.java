@@ -16,7 +16,7 @@ public record UserDto(
             user.getId(),
             user.getEmail(),
             user.getName(),
-            user.getSubscriptionStatus(),
+            user.getSubscriptionStatus() != null ? user.getSubscriptionStatus().name() : "free",
             user.getStoriesGeneratedToday() != null ? user.getStoriesGeneratedToday() : 0,
             user.getStoriesGeneratedTotal() != null ? user.getStoriesGeneratedTotal() : 0
         );
