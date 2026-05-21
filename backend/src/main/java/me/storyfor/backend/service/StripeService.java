@@ -55,6 +55,7 @@ public class StripeService {
         if (secretKey != null && !secretKey.isBlank()) {
             Stripe.apiKey = secretKey;
         }
+        System.out.println("=== STRIPE DEBUG: priceIdEur=[" + priceIdEur + "] len=" + (priceIdEur != null ? priceIdEur.length() : -1) + " env=[" + System.getenv("STRIPE_PRICE_ID_EUR") + "] ===");
     }
 
     public String createCheckoutSession(User user, String currency) throws StripeException {
