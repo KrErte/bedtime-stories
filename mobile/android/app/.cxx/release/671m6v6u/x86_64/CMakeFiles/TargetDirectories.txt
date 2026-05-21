@@ -1,0 +1,2 @@
+C:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/release/671m6v6u/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/release/671m6v6u/x86_64/CMakeFiles/rebuild_cache.dir

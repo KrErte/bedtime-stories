@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
 class ApiService {
-  static const baseUrl = 'https://api.dreamlit.ee/api';
+  static const baseUrl = 'https://dreamlit.ee/api';
 
   final _storage = const FlutterSecureStorage();
 
@@ -30,9 +30,10 @@ class ApiService {
     return _handleResponse(res);
   }
 
-  Future<dynamic> post(String path, {Map<String, dynamic>? body}) async {
+  Future<dynamic> post(String path, {Map<String, dynamic>? body, Map<String, String>? params}) async {
+    final uri = Uri.parse('$baseUrl$path').replace(queryParameters: params);
     final res = await _buildClient().post(
-      Uri.parse('$baseUrl$path'),
+      uri,
       headers: await _headers(),
       body: body != null ? jsonEncode(body) : null,
     );
@@ -61,8 +62,10 @@ class ApiService {
       if (res.body.isEmpty) return null;
       return jsonDecode(res.body);
     }
-    final error = res.body.isNotEmpty ? jsonDecode(res.body) : {};
-    throw ApiException(res.statusCode, error['message'] ?? 'Request failed');
+    Map error = {};
+    try { error = res.body.isNotEmpty ? jsonDecode(res.body) : {}; } catch (_) {}
+    final msg = error['message'] as String?;
+    throw ApiException(res.statusCode, msg ?? 'HTTP ${res.statusCode}: ${res.body.isEmpty ? "empty" : res.body}');
   }
 }
 
@@ -71,5 +74,5 @@ class ApiException implements Exception {
   final String message;
   ApiException(this.statusCode, this.message);
   @override
-  String toString() => message;
+  String toString() => '[$statusCode] $message';
 }

@@ -12,18 +12,18 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthService()),
         Provider(create: (_) => ApiService()),
       ],
-      child: const StoryForMeApp(),
+      child: const DreamlitApp(),
     ),
   );
 }
 
-class StoryForMeApp extends StatelessWidget {
-  const StoryForMeApp({super.key});
+class DreamlitApp extends StatelessWidget {
+  const DreamlitApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'StoryFor.me',
+      title: 'Dreamlit.ee',
       theme: AppTheme.darkTheme,
       routerConfig: appRouter(context),
       debugShowCheckedModeBanner: false,

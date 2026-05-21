@@ -17,11 +17,17 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
   Future<void> _checkout() async {
     setState(() => _loading = true);
     try {
-      final res = await _api.post('/subscription/checkout');
+      final tz = DateTime.now().timeZoneName;
+      final currency = tz.contains('EET') || tz.contains('EEST') || tz.contains('CET') || tz.contains('GMT+2') || tz.contains('GMT+3') ? 'eur' : 'usd';
+      final res = await _api.post('/subscription/checkout', params: {'currency': currency});
       final url = res['url'] as String;
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), duration: const Duration(seconds: 5)),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -39,7 +45,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
           Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(children: [
             const Text('Pro', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('\$7.99/month', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            const Text('€4.99/month', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ...[
               'Unlimited stories (20/day)',
