@@ -12,7 +12,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/shell/shell.component').then(m => m.ShellComponent),
     children: [
-      { path: '', redirectTo: 'library', pathMatch: 'full' },
+      { path: '', redirectTo: 'children', pathMatch: 'full' },
       { path: 'children', loadComponent: () => import('./pages/children/children.component').then(m => m.ChildrenComponent) },
       { path: 'new-story', loadComponent: () => import('./pages/new-story/new-story.component').then(m => m.NewStoryComponent) },
       { path: 'story/:id', loadComponent: () => import('./pages/story-reader/story-reader.component').then(m => m.StoryReaderComponent) },

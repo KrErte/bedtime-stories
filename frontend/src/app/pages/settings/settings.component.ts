@@ -1,16 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { NativeService } from '../../services/native.service';
+import { ConfirmModalComponent } from '../../shared/confirm-modal.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
   template: `
+    <app-confirm-modal
+      [visible]="cancelModal()"
+      title="Cancel subscription?"
+      message="You will keep Pro features until the end of your billing period."
+      icon="💳"
+      confirmLabel="Cancel subscription"
+      [confirmDanger]="true"
+      (confirmed)="confirmCancel()"
+      (cancelled)="cancelModal.set(false)">
+    </app-confirm-modal>
+
     <div class="max-w-2xl mx-auto">
       <h1 class="text-2xl font-bold mb-8">Settings</h1>
 
@@ -75,6 +87,7 @@ import { NativeService } from '../../services/native.service';
   `,
 })
 export class SettingsComponent {
+  cancelModal = signal(false);
   reminderHour = 20;
   reminderOn = false;
   hours = [18, 19, 20, 21, 22];
@@ -88,19 +101,23 @@ export class SettingsComponent {
     }
   }
 
+  cancelSubscription() {
+    this.cancelModal.set(true);
+  }
+
+  confirmCancel() {
+    this.subscription.cancel().subscribe(() => {
+      this.cancelModal.set(false);
+    });
+  }
+
   toggleReminder() {
     this.reminderOn = !this.reminderOn;
+    localStorage.setItem('bedtimeReminder', JSON.stringify({ hour: this.reminderHour, on: this.reminderOn }));
     if (this.reminderOn) {
       this.native.scheduleBedtimeReminder(this.reminderHour, 0);
     } else {
       this.native.cancelBedtimeReminder();
-    }
-    localStorage.setItem('bedtimeReminder', JSON.stringify({ hour: this.reminderHour, on: this.reminderOn }));
-  }
-
-  cancelSubscription() {
-    if (confirm('Are you sure? You will lose Pro features at the end of your billing period.')) {
-      this.subscription.cancel().subscribe();
     }
   }
 }

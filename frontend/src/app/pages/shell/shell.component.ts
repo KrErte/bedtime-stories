@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -18,6 +18,9 @@ import { AuthService } from '../../services/auth.service';
           <a routerLink="/app/new-story" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
             <span>&#10024;</span> New Story
           </a>
+          <a routerLink="/app/children" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
+            <span>&#128118;</span> Children
+          </a>
           <a routerLink="/app/library" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
             <span>&#128218;</span> Library
           </a>
@@ -27,26 +30,20 @@ import { AuthService } from '../../services/auth.service';
           <a routerLink="/app/dream-universe" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
             <span>&#127756;</span> Dream Universe
           </a>
-          <a routerLink="/app/children" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
-            <span>&#128118;</span> Children
-          </a>
-          <a routerLink="/app/settings" routerLinkActive="bg-story-purple/20 text-story-purple" class="flex items-center gap-3 px-4 py-3 rounded-xl text-navy-300 hover:text-white hover:bg-navy-800 transition-all">
-            <span>&#9881;</span> Settings
-          </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-navy-700/50">
           @if (!auth.isPro()) {
             <a routerLink="/app/subscribe" class="block text-center btn-primary text-sm mb-4">Upgrade to Pro</a>
           }
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-story-purple flex items-center justify-center text-sm font-bold">
+          <button (click)="router.navigate(['/app/settings'])" class="flex items-center gap-3 w-full text-left hover:bg-navy-800/60 rounded-xl px-2 py-2 -mx-2 transition-all group">
+            <div class="w-8 h-8 rounded-full bg-story-purple flex items-center justify-center text-sm font-bold flex-shrink-0">
               {{ auth.currentUser()?.name?.charAt(0) || 'U' }}
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium truncate">{{ auth.currentUser()?.name }}</p>
-              <p class="text-xs text-navy-400 truncate">{{ auth.currentUser()?.email }}</p>
+              <p class="text-xs text-navy-400 truncate group-hover:text-story-purple transition-colors">&#9881; Settings</p>
             </div>
-          </div>
+          </button>
           <button (click)="auth.logout()" class="mt-3 text-sm text-navy-400 hover:text-red-400 transition-colors w-full text-left">
             Sign out
           </button>
@@ -71,7 +68,7 @@ import { AuthService } from '../../services/auth.service';
             <a routerLink="/app/favorites" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Favorites</a>
             <a routerLink="/app/dream-universe" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Dream Universe</a>
             <a routerLink="/app/children" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Children</a>
-            <a routerLink="/app/settings" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">Settings</a>
+            <a routerLink="/app/settings" (click)="menuOpen=false" class="block px-4 py-2 rounded-lg text-navy-300 hover:bg-navy-800">&#9881; Settings</a>
             <button (click)="auth.logout()" class="text-red-400 px-4 py-2">Sign out</button>
           </div>
         }
@@ -85,5 +82,5 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ShellComponent {
   menuOpen = false;
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, public router: Router) {}
 }

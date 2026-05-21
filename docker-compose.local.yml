@@ -1,0 +1,6 @@
+# Lokaalse arenduse override
+# Kasutus: docker-compose -f docker-compose.yml -f docker-compose.local.yml up backend db
+services:
+  backend:
+    environment:
+      - ALLOWED_ORIGINS=https://dreamlit.ee,https://www.dreamlit.ee,http://localhost:4200,http://10.0.2.2:8080
