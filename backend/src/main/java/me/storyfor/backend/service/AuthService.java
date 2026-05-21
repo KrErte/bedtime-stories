@@ -61,6 +61,7 @@ public class AuthService {
         user.setStoriesGeneratedToday(0);
         user.setStoriesGeneratedTotal(0);
         user = userRepository.save(user);
+        emailService.sendWelcomeEmail(user.getEmail(), user.getName());
         return buildAuthResponse(user);
     }
 
@@ -88,6 +89,7 @@ public class AuthService {
             String name = (String) payload.get("name");
             String googleId = payload.getSubject();
 
+            boolean[] isNew = {false};
             User user = userRepository.findByEmail(email).orElseGet(() -> {
                 User newUser = new User();
                 newUser.setEmail(email);
@@ -97,8 +99,12 @@ public class AuthService {
                 newUser.setSubscriptionStatus(SubscriptionStatus.free);
                 newUser.setStoriesGeneratedToday(0);
                 newUser.setStoriesGeneratedTotal(0);
+                isNew[0] = true;
                 return userRepository.save(newUser);
             });
+            if (isNew[0]) {
+                emailService.sendWelcomeEmail(user.getEmail(), user.getName());
+            }
             return buildAuthResponse(user);
         } catch (Exception e) {
             throw new RuntimeException("Google authentication failed", e);

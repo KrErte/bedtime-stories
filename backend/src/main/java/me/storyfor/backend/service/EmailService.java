@@ -25,6 +25,41 @@ public class EmailService {
         this.fromEmail = fromEmail;
     }
 
+    public void sendWelcomeEmail(String to, String name) {
+        String n = name != null ? name : "there";
+        String html = """
+                <div style="font-family:sans-serif;max-width:520px;margin:auto;background:#0d0b1e;color:#e2e0f0;padding:40px;border-radius:16px;">
+                  <h1 style="color:#a855f7;margin-bottom:8px;">✨ Welcome to Dreamlit.ee!</h1>
+                  <p style="font-size:16px;">Hi %s,</p>
+                  <p>You're all set! Start creating magical, personalized bedtime stories for your little ones.</p>
+                  <a href="https://dreamlit.ee/app/new-story"
+                     style="display:inline-block;margin-top:16px;padding:14px 28px;background:#7c3aed;color:white;text-decoration:none;border-radius:10px;font-weight:bold;">
+                    Create Your First Story
+                  </a>
+                  <p style="margin-top:32px;font-size:13px;color:#6b6a8a;">Sweet dreams,<br/>The Dreamlit team 🌙</p>
+                </div>
+                """.formatted(n);
+        sendEmail(to, "Welcome to Dreamlit.ee ✨", html);
+    }
+
+    public void sendSubscriptionConfirmationEmail(String to, String name) {
+        String n = name != null ? name : "there";
+        String html = """
+                <div style="font-family:sans-serif;max-width:520px;margin:auto;background:#0d0b1e;color:#e2e0f0;padding:40px;border-radius:16px;">
+                  <h1 style="color:#a855f7;margin-bottom:8px;">🌟 You're now Pro!</h1>
+                  <p style="font-size:16px;">Hi %s,</p>
+                  <p>Thank you for subscribing to Dreamlit Pro! You now have access to unlimited stories, audio narration, and AI illustrations.</p>
+                  <a href="https://dreamlit.ee/app/new-story"
+                     style="display:inline-block;margin-top:16px;padding:14px 28px;background:#7c3aed;color:white;text-decoration:none;border-radius:10px;font-weight:bold;">
+                    Start Creating
+                  </a>
+                  <p style="margin-top:24px;font-size:13px;color:#6b6a8a;">You can manage your subscription anytime in Settings.</p>
+                  <p style="font-size:13px;color:#6b6a8a;">Sweet dreams,<br/>The Dreamlit team 🌙</p>
+                </div>
+                """.formatted(n);
+        sendEmail(to, "Welcome to Dreamlit Pro 🌟", html);
+    }
+
     public void sendPasswordResetEmail(String to, String name, String resetLink) {
         String html = """
                 <h2>Reset Your Password</h2>

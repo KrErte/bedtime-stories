@@ -5,8 +5,10 @@ import { ApiService } from './api.service';
 export class SubscriptionService {
   constructor(private api: ApiService) {}
 
-  checkout() {
-    return this.api.post<{ url: string }>('/subscription/checkout');
+  checkout(currency?: string) {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
+    const cur = currency ?? (tz.startsWith('Europe') ? 'eur' : 'usd');
+    return this.api.post<{ url: string }>(`/subscription/checkout?currency=${cur}`);
   }
 
   getStatus() {

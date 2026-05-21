@@ -25,6 +25,7 @@ public class StripeService {
 
     private final UserRepository userRepository;
     private final SubscriptionEventRepository eventRepository;
+    private final EmailService emailService;
     private final String secretKey;
     private final String webhookSecret;
     private final String priceIdEur;
@@ -33,6 +34,7 @@ public class StripeService {
 
     public StripeService(UserRepository userRepository,
                          SubscriptionEventRepository eventRepository,
+                         EmailService emailService,
                          @Value("${stripe.secret-key}") String secretKey,
                          @Value("${stripe.webhook-secret}") String webhookSecret,
                          @Value("${stripe.price-id-eur}") String priceIdEur,
@@ -40,6 +42,7 @@ public class StripeService {
                          @Value("${app.url}") String appUrl) {
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.emailService = emailService;
         this.secretKey = secretKey;
         this.webhookSecret = webhookSecret;
         this.priceIdEur = priceIdEur;
@@ -97,6 +100,7 @@ public class StripeService {
                         user.setSubscriptionStatus(SubscriptionStatus.pro);
                         user.setStripeCustomerId(session.getCustomer());
                         userRepository.save(user);
+                        emailService.sendSubscriptionConfirmationEmail(user.getEmail(), user.getName());
                     }
                 }
                 case "invoice.paid" -> {
