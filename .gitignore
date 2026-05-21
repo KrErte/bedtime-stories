@@ -1,0 +1,52 @@
+# Java
+backend/target/
+*.class
+*.jar
+*.war
+
+# Maven
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Environment
+.env
+*.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Audio data
+/data/audio/
+
+# Logs
+*.log
+
+# Playwright MCP
+.playwright-mcp/
+
+# Mobile build artifacts
+frontend/ios/App/Pods/
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/capacitor-cordova-android-plugins/
+
+# Flutter
+mobile/.dart_tool/
+mobile/.packages
+mobile/build/
+.aider*
+-e 
+# Android keystore - EI TOHI GITI MINNA!
+*.jks
+*.keystore

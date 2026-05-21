@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dreamlit.ee — Personalized Bedtime Stories</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AI-powered personalized bedtime stories where your child is the hero. Audio narration, illustrations, and magical adventures every night.">
+
+  <!-- PWA / theme -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dreamlit">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+  <!-- Standard favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+
+  <!-- Install banner -->
+  <div id="install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px;background:linear-gradient(135deg,#1e1b4b,#312e81);border-top:1px solid rgba(139,92,246,0.3);box-shadow:0 -4px 20px rgba(0,0,0,0.5);">
+    <div style="max-width:480px;margin:0 auto;display:flex;align-items:center;gap:12px;">
+      <img src="icons/icon-96x96.png" alt="Dreamlit" style="width:48px;height:48px;border-radius:12px;flex-shrink:0;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;color:#e2e8f0;font-size:15px;">Install Dreamlit</div>
+        <div id="install-hint" style="color:#94a3b8;font-size:13px;margin-top:2px;"></div>
+      </div>
+      <button id="install-btn" style="background:#7c3aed;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;flex-shrink:0;">Install</button>
+      <button id="install-close" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;padding:4px 8px;flex-shrink:0;">&times;</button>
+    </div>
+  </div>
+
+  <!-- Service Worker + Install prompt -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(r => { if (r.waiting) r.waiting.postMessage({ type: 'SKIP_WAITING' }); })
+          .catch(e => console.error('[SW]', e));
+      });
+    }
+
+    // Install prompt logic
+    (function() {
+      var banner = document.getElementById('install-banner');
+      var btn = document.getElementById('install-btn');
+      var hint = document.getElementById('install-hint');
+      var closeBtn = document.getElementById('install-close');
+      var deferredPrompt = null;
+
+      // Don't show if already installed or dismissed or on localhost
+      if (window.matchMedia('(display-mode: standalone)').matches) return;
+      if (window.navigator.standalone === true) return;
+      if (localStorage.getItem('pwa-dismissed')) return;
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
+
+      closeBtn.onclick = function() {
+        banner.style.display = 'none';
+        localStorage.setItem('pwa-dismissed', Date.now());
+      };
+
+      // Android Chrome - native install prompt
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        hint.textContent = 'Add to your home screen for the best experience';
+        btn.textContent = 'Install';
+        banner.style.display = 'block';
+        btn.onclick = function() {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function() { banner.style.display = 'none'; });
+        };
+      });
+
+      // Show on all mobile devices after short delay
+      var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        setTimeout(function() {
+          if (banner.style.display === 'block') return; // already shown by beforeinstallprompt
+          var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          if (isIOS) {
+            hint.innerHTML = 'Tap <strong>Share</strong> &#x2B06; then <strong>"Add to Home Screen"</strong>';
+          } else {
+            hint.innerHTML = 'Tap <strong>&#8942; menu</strong> then <strong>"Install app"</strong>';
+          }
+          btn.textContent = 'OK';
+          btn.onclick = function() { banner.style.display = 'none'; localStorage.setItem('pwa-dismissed', Date.now()); };
+          banner.style.display = 'block';
+        }, 1500);
+      }
+    })();
+  </script>
+</body>
+</html>

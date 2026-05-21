@@ -1,0 +1,26 @@
+# Production (Caddy haldab HTTPS ja HTTP->HTTPS redirect automaatselt)
+dreamlit.ee {
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+    handle /webhooks/* {
+        reverse_proxy backend:8080
+    }
+    handle {
+        reverse_proxy frontend:80
+    }
+}
+
+# Local development - Caddy genereerib ise lokaalse sertifikaadi
+localhost {
+    tls internal
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+    handle /webhooks/* {
+        reverse_proxy backend:8080
+    }
+    handle {
+        reverse_proxy frontend:80
+    }
+}
