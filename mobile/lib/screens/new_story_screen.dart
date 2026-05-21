@@ -19,7 +19,6 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
   Child? _selectedChild;
   String? _selectedTheme;
   String? _selectedVoice;
-  String _selectedLanguage = 'English';
   bool _generating = false;
   String? _error;
 
@@ -42,18 +41,6 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
     {'value': 'sage', 'label': 'Sage', 'desc': 'Classic storyteller'},
   ];
 
-  final _languages = [
-    {'value': 'English', 'label': 'English', 'flag': '🇬🇧'},
-    {'value': 'Estonian', 'label': 'Eesti', 'flag': '🇪🇪'},
-    {'value': 'Finnish', 'label': 'Suomi', 'flag': '🇫🇮'},
-    {'value': 'Russian', 'label': 'Русский', 'flag': '🇷🇺'},
-    {'value': 'Latvian', 'label': 'Latviešu', 'flag': '🇱🇻'},
-    {'value': 'Lithuanian', 'label': 'Lietuvių', 'flag': '🇱🇹'},
-    {'value': 'German', 'label': 'Deutsch', 'flag': '🇩🇪'},
-    {'value': 'French', 'label': 'Français', 'flag': '🇫🇷'},
-    {'value': 'Spanish', 'label': 'Español', 'flag': '🇪🇸'},
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -71,7 +58,6 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
       final res = await _api.post('/stories/generate', body: {
         'childId': _selectedChild!.id,
         'theme': _selectedTheme,
-        'language': _selectedLanguage,
         if (voice != null) 'voice': voice,
       });
       if (mounted) context.go('/story/${res['id']}');
@@ -108,8 +94,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
                       ElevatedButton(onPressed: () => setState(() => _error = null), child: const Text('Try Again')),
                     ])
                   : _step == 0 ? _buildChildSelection()
-                  : _step == 1 ? _buildLanguageSelection()
-                  : _step == 2 ? _buildThemeSelection()
+                  : _step == 1 ? _buildThemeSelection()
                   : _buildVoiceSelection(isPro),
             ),
     );
@@ -137,51 +122,6 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
     ]);
   }
 
-  Widget _buildLanguageSelection() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('Story for ${_selectedChild!.name}', style: TextStyle(color: Colors.white.withOpacity(0.5))),
-      const SizedBox(height: 8),
-      const Text('Story language', style: TextStyle(fontSize: 16)),
-      const SizedBox(height: 16),
-      GridView.count(
-        crossAxisCount: 3,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        childAspectRatio: 1.2,
-        children: _languages.map((l) => GestureDetector(
-          onTap: () => setState(() => _selectedLanguage = l['value']!),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _selectedLanguage == l['value']
-                  ? AppTheme.storyPurple.withOpacity(0.2)
-                  : AppTheme.navy800.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: _selectedLanguage == l['value']
-                    ? AppTheme.storyPurple
-                    : AppTheme.navy700.withOpacity(0.5),
-                width: _selectedLanguage == l['value'] ? 2 : 1,
-              ),
-            ),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(l['flag']!, style: const TextStyle(fontSize: 24)),
-              const SizedBox(height: 6),
-              Text(l['label']!, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-            ]),
-          ),
-        )).toList(),
-      ),
-      const SizedBox(height: 24),
-      SizedBox(width: double.infinity, child: ElevatedButton(
-        onPressed: () => setState(() => _step = 2),
-        child: const Text('Continue'),
-      )),
-      TextButton(onPressed: () => setState(() => _step = 0), child: const Text('< Back')),
-    ]);
-  }
-
   Widget _buildThemeSelection() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Story for ${_selectedChild!.name}', style: TextStyle(color: Colors.white.withOpacity(0.5))),
@@ -195,7 +135,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         children: _themes.map((t) => GestureDetector(
-          onTap: () => setState(() { _selectedTheme = t['value'] as String; _step = 3; }),
+          onTap: () => setState(() { _selectedTheme = t['value'] as String; _step = 2; }),
           child: Container(
             decoration: BoxDecoration(
               color: AppTheme.navy800.withOpacity(0.5),
@@ -210,7 +150,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
           ),
         )).toList(),
       ),
-      TextButton(onPressed: () => setState(() => _step = 1), child: const Text('< Back')),
+      TextButton(onPressed: () => setState(() => _step = 0), child: const Text('< Back')),
     ]);
   }
 
@@ -225,7 +165,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
         )),
         const SizedBox(height: 8),
         TextButton(onPressed: () => context.go('/subscribe'), child: const Text('Upgrade to Pro', style: TextStyle(color: AppTheme.storyPurple))),
-        TextButton(onPressed: () => setState(() => _step = 2), child: const Text('< Back')),
+        TextButton(onPressed: () => setState(() => _step = 1), child: const Text('< Back')),
       ]);
     }
 
@@ -271,7 +211,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
         onPressed: () => _generate(null),
         child: const Text('Generate (Text Only)'),
       )),
-      TextButton(onPressed: () => setState(() => _step = 2), child: const Text('< Back')),
+      TextButton(onPressed: () => setState(() => _step = 1), child: const Text('< Back')),
     ]);
   }
 }

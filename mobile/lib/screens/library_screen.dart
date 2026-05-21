@@ -14,7 +14,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
   final _api = ApiService();
   List<Story> _stories = [];
   bool _loading = true;
-  String? _error;
 
   @override
   void initState() {
@@ -23,16 +22,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _load() async {
-    setState(() { _loading = true; _error = null; });
-    try {
     final res = await _api.get('/stories', params: {'page': '0', 'size': '20'});
     setState(() {
       _stories = (res['content'] as List).map((e) => Story.fromJson(e)).toList();
       _loading = false;
     });
-    } catch (e) {
-      setState(() { _error = e.toString(); _loading = false; });
-    }
   }
 
   @override

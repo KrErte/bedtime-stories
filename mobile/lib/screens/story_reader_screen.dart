@@ -30,7 +30,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
     final story = Story.fromJson(res);
     setState(() { _story = story; _loading = false; });
     if (story.audioUrl != null) {
-      await _player.setUrl('${ApiService.baseHost}${story.audioUrl}');
+      await _player.setUrl('${ApiService.baseUrl}${story.audioUrl}');
     }
   }
 

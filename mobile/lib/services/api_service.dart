@@ -1,22 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
 class ApiService {
-  static const _prodBase = 'https://api.dreamlit.ee';
-  static const _devBase  = 'http://10.0.2.2:8080';
-
-  static String get baseHost => kReleaseMode ? _prodBase : _devBase;
-  static String get baseUrl  => '$baseHost/api';
+  static const baseUrl = 'https://api.dreamlit.ee/api';
 
   final _storage = const FlutterSecureStorage();
 
   http.Client _buildClient() {
-    if (kReleaseMode) return http.Client();
-    final ioClient = HttpClient()
+    final ctx = SecurityContext.defaultContext;
+    final ioClient = HttpClient(context: ctx)
       ..badCertificateCallback = (cert, host, port) => true;
     return IOClient(ioClient);
   }

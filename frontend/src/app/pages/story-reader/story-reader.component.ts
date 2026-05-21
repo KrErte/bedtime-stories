@@ -5,7 +5,10 @@ import { Story, StoryService } from '../../services/story.service';
 import { AuthService } from '../../services/auth.service';
 import { NativeService } from '../../services/native.service';
 import { HttpClient } from '@angular/common/http';
+<<<<<<< HEAD
 import { environment } from '../../../environments/environment';
+=======
+>>>>>>> origin/main
 
 @Component({
   selector: 'app-story-reader',
@@ -31,11 +34,20 @@ import { environment } from '../../../environments/environment';
           @for (block of storyBlocks(); track $index) {
             @if (block.type === 'image') {
               <div class="rounded-2xl overflow-hidden shadow-2xl shadow-purple-900/20">
+<<<<<<< HEAD
                 <img [src]="block.content" alt="Story illustration"
                      class="w-full object-cover"
                      style="aspect-ratio:16/9;"
                      loading="lazy"
                      (error)="onImgError($event)" />
+=======
+                <div class="bg-navy-800 aspect-video flex items-center justify-center text-navy-500">
+                  <div class="text-center">
+                    <span class="text-4xl block mb-2">&#127749;</span>
+                    <span class="text-sm">{{ block.content }}</span>
+                  </div>
+                </div>
+>>>>>>> origin/main
               </div>
             } @else {
               <p class="story-text text-navy-100 leading-[1.9]">{{ block.content }}</p>
@@ -137,9 +149,13 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
   }
 
   private loadAudio(audioUrl: string) {
+<<<<<<< HEAD
     const base = environment.apiUrl.replace('/api', '');
     const fullUrl = audioUrl.startsWith('http') ? audioUrl : base + audioUrl;
     this.http.get(fullUrl, { responseType: 'blob' }).subscribe({
+=======
+    this.http.get(audioUrl, { responseType: 'blob' }).subscribe({
+>>>>>>> origin/main
       next: (blob) => this.audioBlobUrl.set(URL.createObjectURL(blob)),
       error: () => console.warn('Failed to load audio'),
     });
@@ -182,15 +198,19 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
     this.audioRef.nativeElement.currentTime = val;
   }
 
+<<<<<<< HEAD
   onImgError(event: Event) {
     (event.target as HTMLImageElement).style.display = 'none';
   }
 
+=======
+>>>>>>> origin/main
   share() {
     const s = this.story();
     if (s) this.native.shareStory(s.title, s.id);
   }
 
+<<<<<<< HEAD
   formatTime(seconds: number): string {
     if (!seconds || isNaN(seconds)) return '0:00';
     const m = Math.floor(seconds / 60);
@@ -198,9 +218,21 @@ export class StoryReaderComponent implements OnInit, OnDestroy {
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
+=======
+>>>>>>> origin/main
   toggleFavorite() {
     this.storyService.toggleFavorite(this.story()!.id).subscribe(updated => {
       this.story.set(updated);
     });
   }
+<<<<<<< HEAD
 }
+=======
+
+  formatTime(seconds: number): string {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+}
+>>>>>>> origin/main

@@ -54,11 +54,10 @@
       var closeBtn = document.getElementById('install-close');
       var deferredPrompt = null;
 
-      // Don't show if already installed or dismissed or on localhost
+      // Don't show if already installed or dismissed
       if (window.matchMedia('(display-mode: standalone)').matches) return;
       if (window.navigator.standalone === true) return;
       if (localStorage.getItem('pwa-dismissed')) return;
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
 
       closeBtn.onclick = function() {
         banner.style.display = 'none';

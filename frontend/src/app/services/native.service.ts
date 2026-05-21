@@ -20,49 +20,18 @@ export class NativeService {
   }
 
   async shareStory(title: string, storyId: string) {
-    const url = `https://dreamlit.ee/app/story/${storyId}`;
     if (!this.isNative) {
       if (navigator.share) {
-        await navigator.share({ title, url });
-      } else {
-        // Fallback: copy to clipboard + show toast
-        try {
-          await navigator.clipboard.writeText(url);
-        } catch {
-          const ta = document.createElement('textarea');
-          ta.value = url;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-        }
-        this.showToast('Link copied to clipboard!');
+        await navigator.share({ title, url: `https://dreamlit.ee/app/story/${storyId}` });
       }
       return;
     }
     await Share.share({
-      title,
+      title: title,
       text: `Check out this bedtime story: "${title}" on Dreamlit.ee`,
-      url,
+      url: `https://dreamlit.ee/app/story/${storyId}`,
       dialogTitle: 'Share Story',
     });
-  }
-
-  showToast(message: string, duration = 2500) {
-    const existing = document.getElementById('dreamlit-toast');
-    if (existing) existing.remove();
-    const toast = document.createElement('div');
-    toast.id = 'dreamlit-toast';
-    toast.textContent = message;
-    toast.style.cssText = `
-      position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
-      background:#7c3aed;color:white;padding:10px 20px;border-radius:8px;
-      font-size:14px;font-weight:600;z-index:99999;
-      box-shadow:0 4px 12px rgba(0,0,0,0.4);
-      animation:fadeInUp 0.2s ease;
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), duration);
   }
 
   async hapticTap() {

@@ -6,56 +6,15 @@ import java.util.*;
 @Service
 public class IllustrationService {
 
-    // Picsum Photos - no auth, no referrer issues, reliable CDN
     private static final Map<String, List<String>> THEME_ILLUSTRATIONS = Map.ofEntries(
-        Map.entry("adventure",  List.of(
-            "https://picsum.photos/seed/forest1/800/500",
-            "https://picsum.photos/seed/forest2/800/500",
-            "https://picsum.photos/seed/forest3/800/500",
-            "https://picsum.photos/seed/forest4/800/500"
-        )),
-        Map.entry("friendship", List.of(
-            "https://picsum.photos/seed/meadow1/800/500",
-            "https://picsum.photos/seed/meadow2/800/500",
-            "https://picsum.photos/seed/meadow3/800/500",
-            "https://picsum.photos/seed/meadow4/800/500"
-        )),
-        Map.entry("courage",    List.of(
-            "https://picsum.photos/seed/castle1/800/500",
-            "https://picsum.photos/seed/castle2/800/500",
-            "https://picsum.photos/seed/castle3/800/500",
-            "https://picsum.photos/seed/castle4/800/500"
-        )),
-        Map.entry("nature",     List.of(
-            "https://picsum.photos/seed/nature1/800/500",
-            "https://picsum.photos/seed/nature2/800/500",
-            "https://picsum.photos/seed/nature3/800/500",
-            "https://picsum.photos/seed/nature4/800/500"
-        )),
-        Map.entry("space",      List.of(
-            "https://picsum.photos/seed/space1/800/500",
-            "https://picsum.photos/seed/space2/800/500",
-            "https://picsum.photos/seed/space3/800/500",
-            "https://picsum.photos/seed/space4/800/500"
-        )),
-        Map.entry("ocean",      List.of(
-            "https://picsum.photos/seed/ocean1/800/500",
-            "https://picsum.photos/seed/ocean2/800/500",
-            "https://picsum.photos/seed/ocean3/800/500",
-            "https://picsum.photos/seed/ocean4/800/500"
-        )),
-        Map.entry("magic",      List.of(
-            "https://picsum.photos/seed/magic1/800/500",
-            "https://picsum.photos/seed/magic2/800/500",
-            "https://picsum.photos/seed/magic3/800/500",
-            "https://picsum.photos/seed/magic4/800/500"
-        )),
-        Map.entry("helping",    List.of(
-            "https://picsum.photos/seed/help1/800/500",
-            "https://picsum.photos/seed/help2/800/500",
-            "https://picsum.photos/seed/help3/800/500",
-            "https://picsum.photos/seed/help4/800/500"
-        ))
+        Map.entry("adventure", List.of("/illustrations/forest/forest_day.webp", "/illustrations/forest/forest_path.webp", "/illustrations/forest/forest_night.webp", "/illustrations/forest/forest_cozy.webp")),
+        Map.entry("friendship", List.of("/illustrations/meadow/meadow_flowers.webp", "/illustrations/meadow/meadow_animals.webp", "/illustrations/meadow/meadow_tree.webp", "/illustrations/meadow/meadow_stars.webp")),
+        Map.entry("courage", List.of("/illustrations/castle/castle_gate.webp", "/illustrations/castle/castle_room.webp", "/illustrations/castle/castle_garden.webp", "/illustrations/castle/castle_bed.webp")),
+        Map.entry("nature", List.of("/illustrations/meadow/meadow_flowers.webp", "/illustrations/forest/forest_path.webp", "/illustrations/meadow/meadow_animals.webp", "/illustrations/meadow/meadow_stars.webp")),
+        Map.entry("space", List.of("/illustrations/space/space_stars.webp", "/illustrations/space/space_planet.webp", "/illustrations/space/space_ship.webp", "/illustrations/space/space_sleep.webp")),
+        Map.entry("ocean", List.of("/illustrations/ocean/ocean_surface.webp", "/illustrations/ocean/ocean_deep.webp", "/illustrations/ocean/ocean_beach.webp", "/illustrations/ocean/ocean_sunset.webp")),
+        Map.entry("magic", List.of("/illustrations/castle/castle_gate.webp", "/illustrations/castle/castle_room.webp", "/illustrations/forest/forest_night.webp", "/illustrations/castle/castle_bed.webp")),
+        Map.entry("helping", List.of("/illustrations/meadow/meadow_flowers.webp", "/illustrations/meadow/meadow_animals.webp", "/illustrations/forest/forest_path.webp", "/illustrations/meadow/meadow_stars.webp"))
     );
 
     private static final Map<String, String> THEME_TO_ILLUSTRATION_THEME = Map.of(
