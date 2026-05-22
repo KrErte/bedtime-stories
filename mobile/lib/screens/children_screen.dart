@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../models/child.dart';
 import '../theme.dart';
+import '../l10n/app_localizations.dart';
 
 class ChildrenScreen extends StatefulWidget {
   const ChildrenScreen({super.key});
@@ -30,6 +31,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   }
 
   Future<void> _addChild() async {
+    final l = AppLocalizations.of(context);
     final name = TextEditingController();
     final age = TextEditingController();
     final interests = TextEditingController();
@@ -43,15 +45,15 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
       builder: (ctx) => Padding(
         padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Text('Add Child', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(l.addChildTitle, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
-          TextField(controller: name, decoration: const InputDecoration(hintText: "Child's name")),
+          TextField(controller: name, decoration: InputDecoration(hintText: l.childName)),
           const SizedBox(height: 8),
-          TextField(controller: age, decoration: const InputDecoration(hintText: 'Age (1-12)'), keyboardType: TextInputType.number),
+          TextField(controller: age, decoration: InputDecoration(hintText: l.ageRange), keyboardType: TextInputType.number),
           const SizedBox(height: 8),
-          TextField(controller: interests, decoration: const InputDecoration(hintText: 'Interests (comma separated)')),
+          TextField(controller: interests, decoration: InputDecoration(hintText: l.interestsHint)),
           const SizedBox(height: 8),
-          TextField(controller: animal, decoration: const InputDecoration(hintText: 'Favorite animal')),
+          TextField(controller: animal, decoration: InputDecoration(hintText: l.favoriteAnimal)),
           const SizedBox(height: 16),
           SizedBox(width: double.infinity, child: ElevatedButton(
             onPressed: () async {
@@ -64,7 +66,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
               });
               if (ctx.mounted) Navigator.pop(ctx, true);
             },
-            child: const Text('Save'),
+            child: Text(l.save),
           )),
         ]),
       ),
@@ -74,8 +76,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Children'), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/home'))),
+      appBar: AppBar(title: Text(l.children), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/home'))),
       floatingActionButton: FloatingActionButton(onPressed: _addChild, backgroundColor: AppTheme.storyPurple, child: const Icon(Icons.add)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -83,9 +86,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
               ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
                   const Icon(Icons.child_care, size: 64, color: AppTheme.navy400),
                   const SizedBox(height: 16),
-                  Text('No children yet', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+                  Text(l.noChildrenYet, style: TextStyle(color: Colors.white.withOpacity(0.5))),
                   const SizedBox(height: 16),
-                  ElevatedButton(onPressed: _addChild, child: const Text('Add Your First Child')),
+                  ElevatedButton(onPressed: _addChild, child: Text(l.addYourFirstChild)),
                 ]))
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -99,11 +102,12 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(c.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 4),
-                          Text('Age ${c.age}${c.gender != null ? " · ${c.gender}" : ""}', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
+                          Text('${l.age} ${c.age}${c.gender != null ? " · ${c.gender}" : ""}',
+                              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
                           if (c.interests != null && c.interests!.isNotEmpty)
                             Padding(padding: const EdgeInsets.only(top: 8),
-                              child: Wrap(spacing: 6, children: c.interests!.map((i) => Chip(
-                                label: Text(i, style: const TextStyle(fontSize: 11)),
+                              child: Wrap(spacing: 6, children: c.interests!.map((interest) => Chip(
+                                label: Text(interest, style: const TextStyle(fontSize: 11)),
                                 backgroundColor: AppTheme.navy700, padding: EdgeInsets.zero, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               )).toList()),
                             ),

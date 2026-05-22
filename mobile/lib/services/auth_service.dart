@@ -8,23 +8,61 @@ class AuthService extends ChangeNotifier {
   final _api = ApiService();
   Map<String, dynamic>? _user;
   bool _isLoggedIn = false;
+  bool _isLoading = true;
 
   bool get isLoggedIn => _isLoggedIn;
+  bool get isLoading => _isLoading;
   Map<String, dynamic>? get user => _user;
   bool get isPro => _user?['subscriptionStatus'] == 'pro';
 
   AuthService() {
+    // Kui mis tahes API päring saab 401 ja refresh ebaõnnestub,
+    // logitakse kasutaja automaatselt välja
+    ApiService.onSessionExpired = () {
+      _user = null;
+      _isLoggedIn = false;
+      notifyListeners();
+    };
     _loadUser();
   }
 
   Future<void> _loadUser() async {
-    final userData = await _storage.read(key: 'user');
-    final token = await _storage.read(key: 'accessToken');
-    if (userData != null && token != null) {
+    _isLoading = true;
+    try {
+      final userData = await _storage.read(key: 'user');
+      final refreshToken = await _storage.read(key: 'refreshToken');
+
+      if (userData == null || refreshToken == null) {
+        _isLoggedIn = false;
+        return;
+      }
+
+      // Laadi kasutaja kohalikest andmetest kohe (UI kuvamiseks)
       _user = jsonDecode(userData);
       _isLoggedIn = true;
       notifyListeners();
+
+      // Valideeri seanss — proovi access token refresh'ida
+      // See tagab et vana/kehtetu token ei anna hiljem 401
+      final newToken = await _api.tryRefreshToken();
+      if (newToken == null) {
+        // Refresh token aegunud — logi välja
+        await _clearSession();
+        notifyListeners();
+      }
+    } catch (_) {
+      await _clearSession();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+  }
+
+  Future<void> _clearSession() async {
+    await _storage.deleteAll();
+    _user = null;
+    _isLoggedIn = false;
   }
 
   Future<void> register(String email, String password, String name) async {
@@ -46,9 +84,7 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await _storage.deleteAll();
-    _user = null;
-    _isLoggedIn = false;
+    await _clearSession();
     notifyListeners();
   }
 

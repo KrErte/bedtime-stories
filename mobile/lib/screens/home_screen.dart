@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
+import '../l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthService>();
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -21,7 +23,7 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('Good evening,', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14)),
+                    Text(l.goodEvening, style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14)),
                     Text(auth.user?['name'] ?? 'Friend', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   ]),
                   GestureDetector(
@@ -31,18 +33,18 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 32),
-              _navCard(context, 'New Story', 'Create a magical bedtime story', Icons.auto_awesome, '/new-story'),
+              _navCard(context, l.newStory, l.newStorySubtitle, Icons.auto_awesome, '/new-story'),
               const SizedBox(height: 12),
-              _navCard(context, 'Library', 'Browse your story collection', Icons.menu_book, '/library'),
+              _navCard(context, l.library, l.librarySubtitle, Icons.menu_book, '/library'),
               const SizedBox(height: 12),
-              _navCard(context, 'Favorites', 'Your favorite stories', Icons.favorite, '/favorites'),
+              _navCard(context, l.favorites, l.favoritesSubtitle, Icons.favorite, '/favorites'),
               const SizedBox(height: 12),
-              _navCard(context, 'Children', 'Manage child profiles', Icons.child_care, '/children'),
+              _navCard(context, l.children, l.childrenSubtitle, Icons.child_care, '/children'),
               if (!auth.isPro) ...[
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(onPressed: () => context.go('/subscribe'), child: const Text('Upgrade to Pro')),
+                  child: ElevatedButton(onPressed: () => context.go('/subscribe'), child: Text(l.upgradeToPro)),
                 ),
               ],
             ],

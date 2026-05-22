@@ -5,6 +5,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../models/child.dart';
 import '../theme.dart';
+import '../l10n/app_localizations.dart';
 
 class NewStoryScreen extends StatefulWidget {
   const NewStoryScreen({super.key});
@@ -22,23 +23,11 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
   bool _generating = false;
   String? _error;
 
-  final _themes = [
-    {'value': 'adventure', 'label': 'Adventure', 'icon': Icons.terrain},
-    {'value': 'friendship', 'label': 'Friendship', 'icon': Icons.handshake},
-    {'value': 'courage', 'label': 'Courage', 'icon': Icons.shield},
-    {'value': 'nature', 'label': 'Nature', 'icon': Icons.park},
-    {'value': 'space', 'label': 'Space', 'icon': Icons.rocket_launch},
-    {'value': 'ocean', 'label': 'Under the Sea', 'icon': Icons.water},
-    {'value': 'magic', 'label': 'Magic', 'icon': Icons.auto_awesome},
-    {'value': 'helping', 'label': 'Helping Others', 'icon': Icons.favorite},
-    {'value': 'random', 'label': 'Surprise Me!', 'icon': Icons.casino},
-  ];
-
   final _voices = [
-    {'value': 'luna', 'label': 'Luna', 'desc': 'Warm, gentle female'},
-    {'value': 'atlas', 'label': 'Atlas', 'desc': 'Calm, soothing male'},
-    {'value': 'willow', 'label': 'Willow', 'desc': 'Soft, whispery'},
-    {'value': 'sage', 'label': 'Sage', 'desc': 'Classic storyteller'},
+    {'value': 'luna', 'label': 'Luna'},
+    {'value': 'atlas', 'label': 'Atlas'},
+    {'value': 'willow', 'label': 'Willow'},
+    {'value': 'sage', 'label': 'Sage'},
   ];
 
   @override
@@ -66,20 +55,40 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
     }
   }
 
+  List<Map<String, dynamic>> _themes(AppLocalizations l) => [
+    {'value': 'adventure', 'label': l.themeAdventure, 'icon': Icons.terrain},
+    {'value': 'friendship', 'label': l.themeFriendship, 'icon': Icons.handshake},
+    {'value': 'courage', 'label': l.themeCourage, 'icon': Icons.shield},
+    {'value': 'nature', 'label': l.themeNature, 'icon': Icons.park},
+    {'value': 'space', 'label': l.themeSpace, 'icon': Icons.rocket_launch},
+    {'value': 'ocean', 'label': l.themeOcean, 'icon': Icons.water},
+    {'value': 'magic', 'label': l.themeMagic, 'icon': Icons.auto_awesome},
+    {'value': 'helping', 'label': l.themeHelping, 'icon': Icons.favorite},
+    {'value': 'random', 'label': l.themeRandom, 'icon': Icons.casino},
+  ];
+
+  List<Map<String, String>> _voiceList(AppLocalizations l) => [
+    {'value': 'luna', 'label': 'Luna', 'desc': l.voiceLunaDesc},
+    {'value': 'atlas', 'label': 'Atlas', 'desc': l.voiceAtlasDesc},
+    {'value': 'willow', 'label': 'Willow', 'desc': l.voiceWillowDesc},
+    {'value': 'sage', 'label': 'Sage', 'desc': l.voiceSageDesc},
+  ];
+
   @override
   Widget build(BuildContext context) {
     final isPro = context.watch<AuthService>().isPro;
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Story'),
+        title: Text(l.newStory),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/home')),
       ),
       body: _generating
           ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
               const CircularProgressIndicator(color: AppTheme.storyPurple),
               const SizedBox(height: 24),
-              const Text('Writing a magical story...', style: TextStyle(fontFamily: 'Merriweather', fontSize: 18)),
-              Text('This may take a few seconds', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
+              Text(l.writingStory, style: const TextStyle(fontFamily: 'Merriweather', fontSize: 18)),
+              Text(l.thisMayTake, style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
             ]))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20),
@@ -91,23 +100,23 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
                         child: Text(_error!, style: const TextStyle(color: Colors.redAccent)),
                       ),
                       const SizedBox(height: 16),
-                      ElevatedButton(onPressed: () => setState(() => _error = null), child: const Text('Try Again')),
+                      ElevatedButton(onPressed: () => setState(() => _error = null), child: Text(l.tryAgain)),
                     ])
-                  : _step == 0 ? _buildChildSelection()
-                  : _step == 1 ? _buildThemeSelection()
-                  : _buildVoiceSelection(isPro),
+                  : _step == 0 ? _buildChildSelection(l)
+                  : _step == 1 ? _buildThemeSelection(l)
+                  : _buildVoiceSelection(l, isPro),
             ),
     );
   }
 
-  Widget _buildChildSelection() {
+  Widget _buildChildSelection(AppLocalizations l) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('Who is tonight\'s story for?', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 16)),
+      Text(l.whoIsStoryFor, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 16)),
       const SizedBox(height: 16),
       if (_children.isEmpty) Center(child: Column(children: [
-        Text('Add a child first', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+        Text(l.addChildFirst, style: TextStyle(color: Colors.white.withOpacity(0.5))),
         const SizedBox(height: 12),
-        ElevatedButton(onPressed: () => context.go('/children'), child: const Text('Add Child')),
+        ElevatedButton(onPressed: () => context.go('/children'), child: Text(l.addChild)),
       ])),
       ..._children.map((c) => GestureDetector(
         onTap: () => setState(() { _selectedChild = c; _step = 1; }),
@@ -115,18 +124,20 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
           margin: const EdgeInsets.only(bottom: 12),
           child: Padding(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(c.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Text('Age ${c.age} · Loves ${c.interests?.join(", ") ?? "stories"}', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
+            Text(l.ageAndLoves(c.age, c.interests?.join(', ') ?? 'stories'),
+                style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
           ])),
         ),
       )),
     ]);
   }
 
-  Widget _buildThemeSelection() {
+  Widget _buildThemeSelection(AppLocalizations l) {
+    final themes = _themes(l);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('Story for ${_selectedChild!.name}', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+      Text(l.storyFor(_selectedChild!.name), style: TextStyle(color: Colors.white.withOpacity(0.5))),
       const SizedBox(height: 8),
-      const Text('Pick a theme', style: TextStyle(fontSize: 16)),
+      Text(l.pickTheme, style: const TextStyle(fontSize: 16)),
       const SizedBox(height: 16),
       GridView.count(
         crossAxisCount: 3,
@@ -134,7 +145,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
-        children: _themes.map((t) => GestureDetector(
+        children: themes.map((t) => GestureDetector(
           onTap: () => setState(() { _selectedTheme = t['value'] as String; _step = 2; }),
           child: Container(
             decoration: BoxDecoration(
@@ -150,30 +161,31 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
           ),
         )).toList(),
       ),
-      TextButton(onPressed: () => setState(() => _step = 0), child: const Text('< Back')),
+      TextButton(onPressed: () => setState(() => _step = 0), child: Text(l.back)),
     ]);
   }
 
-  Widget _buildVoiceSelection(bool isPro) {
+  Widget _buildVoiceSelection(AppLocalizations l, bool isPro) {
     if (!isPro) {
       return Column(children: [
-        const Text('Audio is a Pro feature', style: TextStyle(fontSize: 16)),
+        Text(l.audioIsPro, style: const TextStyle(fontSize: 16)),
         const SizedBox(height: 16),
         SizedBox(width: double.infinity, child: ElevatedButton(
           onPressed: () => _generate(null),
-          child: const Text('Generate (Text Only)'),
+          child: Text(l.generateTextOnly),
         )),
         const SizedBox(height: 8),
-        TextButton(onPressed: () => context.go('/subscribe'), child: const Text('Upgrade to Pro', style: TextStyle(color: AppTheme.storyPurple))),
-        TextButton(onPressed: () => setState(() => _step = 1), child: const Text('< Back')),
+        TextButton(onPressed: () => context.go('/subscribe'), child: Text(l.upgradeToPro, style: const TextStyle(color: AppTheme.storyPurple))),
+        TextButton(onPressed: () => setState(() => _step = 1), child: Text(l.back)),
       ]);
     }
 
+    final voices = _voiceList(l);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Choose a narrator voice', style: TextStyle(fontSize: 16)),
+      Text(l.chooseVoice, style: const TextStyle(fontSize: 16)),
       const SizedBox(height: 16),
-      ..._voices.map((v) => GestureDetector(
-        onTap: () => setState(() => _selectedVoice = v['value'] as String),
+      ...voices.map((v) => GestureDetector(
+        onTap: () => setState(() => _selectedVoice = v['value']),
         child: Container(
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.all(16),
@@ -183,9 +195,7 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
                 : AppTheme.navy800.withOpacity(0.5),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _selectedVoice == v['value']
-                  ? AppTheme.storyPurple
-                  : AppTheme.navy700.withOpacity(0.5),
+              color: _selectedVoice == v['value'] ? AppTheme.storyPurple : AppTheme.navy700.withOpacity(0.5),
               width: _selectedVoice == v['value'] ? 2 : 1,
             ),
           ),
@@ -193,8 +203,8 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
             Icon(Icons.record_voice_over, color: _selectedVoice == v['value'] ? AppTheme.storyPurple : Colors.white54),
             const SizedBox(width: 12),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(v['label'] as String, style: const TextStyle(fontWeight: FontWeight.w600)),
-              Text(v['desc'] as String, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.5))),
+              Text(v['label']!, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(v['desc']!, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.5))),
             ]),
             const Spacer(),
             if (_selectedVoice == v['value']) const Icon(Icons.check_circle, color: AppTheme.storyPurple),
@@ -204,14 +214,14 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
       const SizedBox(height: 16),
       SizedBox(width: double.infinity, child: ElevatedButton(
         onPressed: _selectedVoice != null ? () => _generate(_selectedVoice) : null,
-        child: const Text('Generate Story'),
+        child: Text(l.generateStory),
       )),
       const SizedBox(height: 8),
       SizedBox(width: double.infinity, child: OutlinedButton(
         onPressed: () => _generate(null),
-        child: const Text('Generate (Text Only)'),
+        child: Text(l.generateTextOnly),
       )),
-      TextButton(onPressed: () => setState(() => _step = 1), child: const Text('< Back')),
+      TextButton(onPressed: () => setState(() => _step = 1), child: Text(l.back)),
     ]);
   }
 }

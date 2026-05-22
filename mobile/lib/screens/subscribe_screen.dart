@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
+import '../l10n/app_localizations.dart';
 
 class SubscribeScreen extends StatefulWidget {
   const SubscribeScreen({super.key});
@@ -35,35 +36,44 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Upgrade to Pro'), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/home'))),
+      appBar: AppBar(title: Text(l.upgradeToPro), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/home'))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
-          const Text('Unlock the full experience', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(l.unlockExperience, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
           Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(children: [
-            const Text('Pro', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(l.pro, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('€4.99/month', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            Text(l.perMonth, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ...[
-              'Unlimited stories (20/day)',
-              '500-600 words per story',
-              '3-4 illustrations',
-              'Audio narration (4 voices)',
-              'PDF export',
-              '7-day free trial',
+              l.featUnlimited,
+              l.featWords,
+              l.featIllustrations,
+              l.featAudio,
+              l.featPdf,
+              l.sevenDayTrial,
             ].map((f) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(children: [
                 const Icon(Icons.check_circle, color: AppTheme.storyPurple, size: 18),
                 const SizedBox(width: 8),
-                Text(f, style: const TextStyle(fontSize: 14)),
+                Expanded(child: Text(f, style: const TextStyle(fontSize: 14))),
               ]),
             )),
             const SizedBox(height: 20),
-            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _loading ? null : _checkout, child: Text(_loading ? 'Redirecting...' : 'Start Free Trial'))),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _loading ? null : _checkout,
+                child: Text(_loading ? l.loading : l.startFreeTrial),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(l.cancelAnytime, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.4))),
           ]))),
         ]),
       ),

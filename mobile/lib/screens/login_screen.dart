@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
+import '../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -42,10 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   shaderCallback: (bounds) => const LinearGradient(
                     colors: [AppTheme.storyPurple, AppTheme.storyPink],
                   ).createShader(bounds),
-                  child: const Text('StoryFor.me', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(l.appName, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 const SizedBox(height: 8),
-                Text('Welcome back', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+                Text(l.welcomeBack, style: TextStyle(color: Colors.white.withOpacity(0.5))),
                 const SizedBox(height: 32),
                 if (_error != null) Container(
                   width: double.infinity,
@@ -54,13 +56,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.red.withOpacity(0.3))),
                   child: Text(_error!, style: const TextStyle(color: Colors.redAccent, fontSize: 13)),
                 ),
-                TextField(controller: _email, decoration: const InputDecoration(hintText: 'Email'), keyboardType: TextInputType.emailAddress),
+                TextField(controller: _email, decoration: InputDecoration(hintText: l.email), keyboardType: TextInputType.emailAddress),
                 const SizedBox(height: 12),
-                TextField(controller: _password, decoration: const InputDecoration(hintText: 'Password'), obscureText: true),
+                TextField(controller: _password, decoration: InputDecoration(hintText: l.password), obscureText: true),
                 const SizedBox(height: 20),
-                SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _loading ? null : _login, child: Text(_loading ? 'Signing in...' : 'Sign In'))),
+                SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _loading ? null : _login, child: Text(_loading ? l.signingIn : l.signIn))),
                 const SizedBox(height: 16),
-                TextButton(onPressed: () => context.go('/register'), child: const Text("Don't have an account? Sign up", style: TextStyle(color: AppTheme.storyPurple))),
+                TextButton(onPressed: () => context.go('/register'), child: Text(l.noAccount, style: const TextStyle(color: AppTheme.storyPurple))),
               ],
             ),
           ),

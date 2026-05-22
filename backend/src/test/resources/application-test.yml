@@ -32,7 +32,8 @@ openai:
 stripe:
   secret-key: test
   webhook-secret: test
-  price-id: test
+  price-id-eur: test
+  price-id-usd: test
   publishable-key: test
 
 resend:

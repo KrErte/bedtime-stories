@@ -72,8 +72,18 @@ public class EmailService {
         sendEmail(to, "Reset your Dreamlit.ee password", html);
     }
 
+    private boolean isApiKeyConfigured() {
+        return apiKey != null && !apiKey.isBlank()
+                && !apiKey.equalsIgnoreCase("re_dummy")
+                && apiKey.startsWith("re_")
+                && apiKey.length() > 10;
+    }
+
     private void sendEmail(String to, String subject, String html) {
-        if (apiKey == null || apiKey.isBlank()) return;
+        if (!isApiKeyConfigured()) {
+            System.out.println("[EmailService] RESEND_API_KEY not configured — skipping email to " + to + " (subject: " + subject + ")");
+            return;
+        }
         try {
             String json = objectMapper.writeValueAsString(Map.of(
                     "from", fromEmail,
@@ -87,9 +97,13 @@ public class EmailService {
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
-            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClient.newHttpClient()
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
+                System.err.println("[EmailService] Resend API error " + response.statusCode() + " for " + to + ": " + response.body());
+            }
         } catch (Exception e) {
-            System.err.println("Failed to send email: " + e.getMessage());
+            System.err.println("[EmailService] Failed to send email to " + to + ": " + e.getMessage());
         }
     }
 }
