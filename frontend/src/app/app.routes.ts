@@ -23,5 +23,6 @@ export const routes: Routes = [
       { path: 'subscribe', loadComponent: () => import('./pages/subscribe/subscribe.component').then(m => m.SubscribeComponent) },
     ]
   },
+  { path: 'privacy', loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent) },
   { path: '**', redirectTo: '' },
 ];

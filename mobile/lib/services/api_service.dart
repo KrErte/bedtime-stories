@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 
 class ApiService {
   static const baseUrl = 'https://dreamlit.ee/api';
@@ -13,10 +11,7 @@ class ApiService {
   static void Function()? onSessionExpired;
 
   http.Client _buildClient() {
-    final ctx = SecurityContext.defaultContext;
-    final ioClient = HttpClient(context: ctx)
-      ..badCertificateCallback = (cert, host, port) => true;
-    return IOClient(ioClient);
+    return http.Client(); // Kasutab vaikimisi SSL valideerimist
   }
 
   Future<Map<String, String>> _headers({String? overrideToken}) async {

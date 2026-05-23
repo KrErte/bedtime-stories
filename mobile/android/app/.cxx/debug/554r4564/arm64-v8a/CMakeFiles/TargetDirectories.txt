@@ -1,2 +1,2 @@
-C:/Users/Badboy/Downloads/bedtime-stories/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/CMakeFiles/edit_cache.dir
-C:/Users/Badboy/Downloads/bedtime-stories/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/CMakeFiles/rebuild_cache.dir

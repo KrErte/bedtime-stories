@@ -53,6 +53,9 @@ resend:
 
 google:
   client-id: ${GOOGLE_CLIENT_ID:}
+  play:
+    package-name: ${GOOGLE_PLAY_PACKAGE_NAME:ee.dreamlit.app}
+    service-account-json: ${GOOGLE_PLAY_SERVICE_ACCOUNT_JSON:}
 
 audio:
   storage-path: ${AUDIO_STORAGE_PATH:/data/audio}

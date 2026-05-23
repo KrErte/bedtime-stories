@@ -109,8 +109,24 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                         final pos = snap.data ?? Duration.zero;
                         final dur = _player.duration ?? Duration.zero;
                         return Column(children: [
-                          LinearProgressIndicator(value: dur.inMilliseconds > 0 ? pos.inMilliseconds / dur.inMilliseconds : 0, color: AppTheme.storyPurple, backgroundColor: AppTheme.navy600),
-                          const SizedBox(height: 4),
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              trackHeight: 3,
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                              overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                              activeTrackColor: AppTheme.storyPurple,
+                              inactiveTrackColor: AppTheme.navy600,
+                              thumbColor: AppTheme.storyPurple,
+                              overlayColor: AppTheme.storyPurple.withOpacity(0.2),
+                            ),
+                            child: Slider(
+                              value: dur.inMilliseconds > 0 ? pos.inMilliseconds / dur.inMilliseconds : 0,
+                              onChanged: (val) {
+                                final pos = Duration(milliseconds: (val * dur.inMilliseconds).round());
+                                _player.seek(pos);
+                              },
+                            ),
+                          ),
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Text(_fmt(pos), style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),
                             Text(_fmt(dur), style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),

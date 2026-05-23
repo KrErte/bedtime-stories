@@ -39,13 +39,13 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:/Users/Badboy/Downloads/bedtime-stories/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/
+cmake_ninja_workdir = C$:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/debug/554r4564/arm64-v8a/
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\Badboy\Downloads\bedtime-stories\mobile\android\app\.cxx\debug\554r4564\arm64-v8a && C:\Users\Badboy\AppData\Local\Android\Sdk\cmake\3.22.1\bin\cmake.exe -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D C:\Users\Badboy\Videos\iVCam\11\9\mobile\android\app\.cxx\debug\554r4564\arm64-v8a && C:\Users\Badboy\AppData\Local\Android\Sdk\cmake\3.22.1\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -56,7 +56,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\Badboy\Downloads\bedtime-stories\mobile\android\app\.cxx\debug\554r4564\arm64-v8a && C:\Users\Badboy\AppData\Local\Android\Sdk\cmake\3.22.1\bin\cmake.exe --regenerate-during-build -SC:\Users\Badboy\Desktop\flutter\packages\flutter_tools\gradle\src\main\scripts -BC:\Users\Badboy\Downloads\bedtime-stories\mobile\android\app\.cxx\debug\554r4564\arm64-v8a"
+  COMMAND = cmd.exe /C "cd /D C:\Users\Badboy\Videos\iVCam\11\9\mobile\android\app\.cxx\debug\554r4564\arm64-v8a && C:\Users\Badboy\AppData\Local\Android\Sdk\cmake\3.22.1\bin\cmake.exe --regenerate-during-build -SC:\Users\Badboy\Desktop\flutter\packages\flutter_tools\gradle\src\main\scripts -BC:\Users\Badboy\Videos\iVCam\11\9\mobile\android\app\.cxx\debug\554r4564\arm64-v8a"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -72,7 +72,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/Badboy/Downloads/bedtime-stories/mobile/android/app/.cxx/debug/554r4564/arm64-v8a
+# Folder: C:/Users/Badboy/Videos/iVCam/11/9/mobile/android/app/.cxx/debug/554r4564/arm64-v8a
 
 build all: phony
 

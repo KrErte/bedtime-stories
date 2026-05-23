@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'services/api_service.dart';
+import 'services/purchase_service.dart';
 import 'theme.dart';
 import 'router.dart';
 import 'l10n/app_localizations.dart';
@@ -13,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         Provider(create: (_) => ApiService()),
+        ChangeNotifierProvider(create: (_) => PurchaseService()),
       ],
       child: const DreamlitApp(),
     ),
