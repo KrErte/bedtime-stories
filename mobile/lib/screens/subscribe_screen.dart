@@ -142,7 +142,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => context.read<PurchaseService>().restorePurchases(),
-                    child: const Text('Taasta ostud', style: TextStyle(fontSize: 12)),
+                    child: Text(l.restorePurchases, style: const TextStyle(fontSize: 12)),
                   ),
                 ],
               ]),
@@ -163,12 +163,13 @@ class _GooglePlayPriceWidget extends StatelessWidget {
         return const CircularProgressIndicator();
       }
       final product = ps.product;
+      final l = AppLocalizations.of(context);
       if (product == null) {
-        return const Text('4,99 €/kuu',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold));
+        return Text(AppLocalizations.of(context).perMonth,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold));
       }
       return Text(
-        '${product.price}/kuu',
+        '${product.price}${l.perMonthSuffix}',
         style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
       );
     });
@@ -196,7 +197,7 @@ class _GooglePlayBuyButton extends StatelessWidget {
                   width: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('Alusta 7-päevast prooviaega'),
+              : Text(AppLocalizations.of(context).startFreeTrial),
         ),
       );
     });
@@ -218,16 +219,16 @@ class _SuccessView extends StatelessWidget {
             children: [
               const Icon(Icons.star, size: 80, color: AppTheme.storyPurple),
               const SizedBox(height: 24),
-              const Text('Tere tulemast Pro-sse!',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(AppLocalizations.of(context).welcomePro,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              const Text('Sinu tellimus on aktiivne. Naudi piiramatuid lugusid!',
+              Text(AppLocalizations.of(context).subscriptionActive,
                   textAlign: TextAlign.center),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: onDone,
-                child: const Text('Alusta'),
+                child: Text(AppLocalizations.of(context).start),
               ),
             ],
           ),

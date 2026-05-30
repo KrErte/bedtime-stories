@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import '../services/locale_service.dart';
 import '../models/child.dart';
 import '../theme.dart';
 import '../l10n/app_localizations.dart';
@@ -44,9 +45,14 @@ class _NewStoryScreenState extends State<NewStoryScreen> {
   Future<void> _generate(String? voice) async {
     setState(() { _generating = true; _error = null; });
     try {
+      final localeService = context.read<LocaleService>();
+      final langCode = localeService.locale?.languageCode ??
+          WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      final langName = LocaleService.languageNamesForAI[langCode] ?? 'English';
       final res = await _api.post('/stories/generate', body: {
         'childId': _selectedChild!.id,
         'theme': _selectedTheme,
+        'language': langName,
         if (voice != null) 'voice': voice,
       });
       if (mounted) context.go('/story/${res['id']}');
