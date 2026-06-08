@@ -432,10 +432,17 @@ export class LanguageService {
   get translations(): LandingT { return T[this._lang()] ?? T['en']; }
   get supported() { return SUPPORTED; }
 
-  set(lang: string) { if (SUPPORTED.includes(lang)) this._lang.set(lang); }
+  set(lang: string) {
+    if (SUPPORTED.includes(lang)) {
+      this._lang.set(lang);
+      try { localStorage.setItem('dl_lang', lang); } catch {}
+    }
+  }
 
   private _detect(): string {
     try {
+      const saved = localStorage.getItem('dl_lang');
+      if (saved && SUPPORTED.includes(saved)) return saved;
       const l = (navigator.language || 'en').split('-')[0].toLowerCase();
       return SUPPORTED.includes(l) ? l : 'en';
     } catch { return 'en'; }

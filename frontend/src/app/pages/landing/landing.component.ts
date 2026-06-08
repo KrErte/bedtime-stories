@@ -52,6 +52,19 @@ import { LanguageService } from '../../services/language.service';
           <a routerLink="/register" class="btn-primary text-lg !py-4 !px-8 shadow-lg shadow-story-purple/25">{{ t.heroCta }}</a>
         </div>
         <p class="text-navy-500 text-sm mt-4">{{ t.heroNoCc }}</p>
+        <!-- Language selector -->
+        <div class="mt-6 flex flex-wrap justify-center gap-1.5">
+          @for (l of lang.supported; track l) {
+            <button
+              (click)="lang.set(l)"
+              [class.bg-story-purple]="lang.lang === l"
+              [class.text-white]="lang.lang === l"
+              [class.border-story-purple]="lang.lang === l"
+              class="px-2.5 py-1 text-xs uppercase font-medium rounded-full border border-navy-700 text-navy-400 hover:border-story-purple hover:text-white transition-colors">
+              {{ l }}
+            </button>
+          }
+        </div>
         <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-navy-400">
           <span class="flex items-center gap-1.5"><span class="text-story-gold">&#9733;&#9733;&#9733;&#9733;&#9733;</span>{{ t.heroLovedBy }}</span>
           <span class="hidden sm:inline text-navy-700">|</span>

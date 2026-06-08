@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'api_service.dart';
 
 class AuthService extends ChangeNotifier {
-  final _storage = const FlutterSecureStorage();
-  final _api = ApiService();
+  final FlutterSecureStorage _storage;
+  final ApiService _api;
   Map<String, dynamic>? _user;
   bool _isLoggedIn = false;
   bool _isLoading = true;
@@ -15,7 +15,9 @@ class AuthService extends ChangeNotifier {
   Map<String, dynamic>? get user => _user;
   bool get isPro => _user?['subscriptionStatus'] == 'pro';
 
-  AuthService() {
+  AuthService({ApiService? api, FlutterSecureStorage? storage})
+      : _api = api ?? ApiService(),
+        _storage = storage ?? const FlutterSecureStorage() {
     // Kui mis tahes API päring saab 401 ja refresh ebaõnnestub,
     // logitakse kasutaja automaatselt välja
     ApiService.onSessionExpired = () {

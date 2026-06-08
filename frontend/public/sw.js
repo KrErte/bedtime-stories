@@ -1,7 +1,7 @@
 // Dreamlit Service Worker
 // Caches the app shell for offline support and fast repeat visits.
 
-const CACHE_NAME = 'dreamlit-v1';
+const CACHE_NAME = 'dreamlit-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -66,7 +66,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell & static assets: Cache-first, fall back to network.
+  // JS/CSS chunks have content-hashed filenames — always network-first so a
+  // new deploy never serves stale chunks from cache.
+  const isHashedAsset =
+    url.pathname.match(/\.(js|css)$/) &&
+    url.origin === self.location.origin;
+
+  if (isHashedAsset) {
+    event.respondWith(
+      fetch(request).then((response) => {
+        if (response && response.status === 200) {
+          const toCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, toCache));
+        }
+        return response;
+      }).catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // App shell & other static assets: Cache-first, fall back to network.
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
@@ -77,7 +96,7 @@ self.addEventListener('fetch', (event) => {
           !response ||
           response.status !== 200 ||
           response.type === 'opaque' ||
-          !url.origin === self.location.origin
+          url.origin !== self.location.origin
         ) {
           return response;
         }

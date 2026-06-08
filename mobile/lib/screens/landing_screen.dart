@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../l10n/app_localizations.dart';
+import '../services/locale_service.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -9,6 +11,10 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final localeService = context.watch<LocaleService>();
+    final currentCode = localeService.locale?.languageCode ??
+        Localizations.localeOf(context).languageCode;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -47,7 +53,38 @@ class LandingScreen extends StatelessWidget {
                 onPressed: () => context.go('/login'),
                 child: Text(l.alreadyHaveAccount, style: const TextStyle(color: AppTheme.navy300)),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 24),
+              // Language selector
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: LocaleService.languageNames.entries.map((e) {
+                  final isSelected = e.key == currentCode;
+                  return GestureDetector(
+                    onTap: () => localeService.setLocale(Locale(e.key)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppTheme.storyPurple : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected ? AppTheme.storyPurple : AppTheme.navy700,
+                        ),
+                      ),
+                      child: Text(
+                        e.value,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          color: isSelected ? Colors.white : AppTheme.navy300,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 40),
               _buildStep('1', l.step1Title, l.step1Desc),
               const SizedBox(height: 16),
               _buildStep('2', l.pickTheme, l.step2Desc),

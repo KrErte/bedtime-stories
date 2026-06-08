@@ -5,14 +5,19 @@ import 'package:http/http.dart' as http;
 class ApiService {
   static const baseUrl = 'https://dreamlit.ee/api';
 
-  final _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage;
+  final http.Client _client;
 
   // Callback mida AuthService seab — kutsutakse kui refresh ebaõnnestub
   static void Function()? onSessionExpired;
 
-  http.Client _buildClient() {
-    return http.Client(); // Kasutab vaikimisi SSL valideerimist
-  }
+  ApiService({
+    FlutterSecureStorage? storage,
+    http.Client? client,
+  })  : _storage = storage ?? const FlutterSecureStorage(),
+        _client = client ?? http.Client();
+
+  http.Client _buildClient() => _client;
 
   Future<Map<String, String>> _headers({String? overrideToken}) async {
     final token = overrideToken ?? await _storage.read(key: 'accessToken');

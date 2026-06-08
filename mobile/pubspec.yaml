@@ -2,7 +2,7 @@ name: dreamlit
 description: AI-powered personalized bedtime stories
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+13
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -15,7 +15,6 @@ dependencies:
   http: ^1.2.0
   flutter_secure_storage: ^9.2.2
   provider: ^6.1.2
-  google_sign_in: ^6.2.1
   just_audio: ^0.9.39
   url_launcher: ^6.2.5
   cached_network_image: ^3.3.1
@@ -29,6 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true
